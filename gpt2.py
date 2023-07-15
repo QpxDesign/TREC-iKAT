@@ -4,3 +4,5 @@ set_seed(42)
 
 ans = generator("Hello, I'm a language model,", max_length=30, num_return_sequences=5)
 print(ans)
+
+# test
