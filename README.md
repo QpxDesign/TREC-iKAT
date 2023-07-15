@@ -11,6 +11,8 @@
 
 run `bash install-data.sh` to install fastText Data (~5 GB)
 
+see a sample output for the releveance algorthim [here](https://docs.google.com/spreadsheets/d/1-VU4-3qC3Q7mTdF9iZUgs3RjQVbYGD9ixf2JdMcMJRc/edit?usp=sharing)
+
 ### Pipeline for Determining PTKB-Passage Simulatory
 
-[Find Keywords in PTKB & User Input] → [determine cosine simulatory between keywords] → [rank passages by simulatory]
+[Find Keywords in PTKB & Response] → [determine cosine simulatory between keywords] → [rank passages by simulatory]
