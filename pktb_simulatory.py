@@ -34,3 +34,4 @@ with open('./data/2023_train_topics.json', 'r') as f:
         a = findSimulatory(ptkb,'Do you want to continue your bachelors studies and obtain a degree in computer science?') # Rank PTKBs from response (reverse-order)
         print(ptkb + ": " + str(a))
 
+
