@@ -4,8 +4,9 @@
 
 ### Resources
 
-[FastText](https://github.com/facebookresearch/fastText) - a library for efficient learning of word representations and sentence classification.
-[Yake/Yet Another Keyword Extractor](https://github.com/LIAAD/yake) - a light-weight unsupervised automatic keyword extraction method which rests on text statistical features extracted from single documents to select the most important keywords of a text
+- [FastText](https://github.com/facebookresearch/fastText) - a library for efficient learning of word representations and sentence classification.
+- [Yake/Yet Another Keyword Extractor](https://github.com/LIAAD/yake) - a light-weight unsupervised automatic keyword extraction method which rests on text statistical features extracted from single documents to select the most important keywords of a text
+- [GPT-2](https://huggingface.co/gpt2) - Pretrained model on English language using a causal language modeling (CLM) objective, has autocomplete capabilities
 
 ### Notes:
 
