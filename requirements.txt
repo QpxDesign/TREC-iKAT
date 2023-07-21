@@ -1,2 +1,9 @@
 yake
 fasttext
+transformers
+xformers
+pyserini
+torch
+fairscale
+fire
+sentencepiece

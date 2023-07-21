@@ -1,2 +1,4 @@
 data/fastText/*
 output/*
+/llama2/llama-2-7b-chat.zip
+/llama2/llama-2-7b-chat/*
