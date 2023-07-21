@@ -8,6 +8,7 @@
 - [Yake/Yet Another Keyword Extractor](https://github.com/LIAAD/yake) - a light-weight unsupervised automatic keyword extraction method which rests on text statistical features extracted from single documents to select the most important keywords of a text
 - [GPT-2 Large](https://huggingface.co/gpt2-large2) - Pretrained model on English language using a causal language modeling (CLM) objective, has autocomplete capabilities
 - [DQN TUTORIAL](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html) - This tutorial shows how to use PyTorch to train a Deep Q Learning (DQN) agent on the CartPole-v1 task from Gymnasium.
+- [LLAMA2](https://github.com/facebookresearch/llama) - large language model with a built-in chat model, on-par with ChatGPT (using 7B params chat rn) 
 
 ### Notes:
 
