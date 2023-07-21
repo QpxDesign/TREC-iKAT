@@ -6,9 +6,7 @@
 #gzip -d cc.en.300.bin.gz 
 #cd ../../
 
-
 # download llama 7B chat (~12GB)
-mkdir ./data/llama/
-curl -o ./data/llama/llama-2-7b-chat.zip https://media.quinnpatwardhan.com/data/llama-2-7b-chat.zip
-cd ./data/llama/zx
-unzip ./data/llama-2-7b-chat.zip -d llama-2-7b-chat
+cd ./llama
+curl -o ./llama-2-7b-chat.zip https://media.quinnpatwardhan.com/data/llama-2-7b-chat.zip
+unzip ./data/llama-2-7b-chat.zip
