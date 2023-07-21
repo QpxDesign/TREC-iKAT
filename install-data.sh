@@ -7,6 +7,6 @@
 #cd ../../
 
 # download llama 7B chat (~12GB)
-cd ./llama
+cd ./llama2
 curl -o ./llama-2-7b-chat.zip https://media.quinnpatwardhan.com/data/llama-2-7b-chat.zip
 unzip ./data/llama-2-7b-chat.zip
