@@ -42,7 +42,6 @@ def keywordSim(PTKB, Question):
     return len(total)
         """
 def transformerSim(statements, question):
-    print("QUESTION: " + question)
     question_embedding = st_model.encode(question, convert_to_tensor=True)
 
     statement_embeddings = st_model.encode(statements, convert_to_tensor=True)
