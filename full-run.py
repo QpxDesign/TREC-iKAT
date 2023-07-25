@@ -14,10 +14,11 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
     a = pktb_similarity.rankPTKBS(PTKBs,topic_obj["turns"][turn_index]["resolved_utterance"])
     data["user utterance"] = topic_obj["turns"][turn_index]["resolved_utterance"]
     data["ranked_ptkbs"] = a
-    # potineal threshold = .7
+    # potential threshold: = .7
     filename = f"run-{time.time()}.json"
     print(data["ranked_ptkbs"])
-    llama2.gen_response(f"")
+    a = llama2.gen_response(topic_obj["turns"][turn_index]["resolved_utterance"],topic_obj["turns"][0:turn_index])
+    print(a)
     with open(f"./output/{filename}", 'a') as f2:
         f2.write(json.dumps(data))
 
