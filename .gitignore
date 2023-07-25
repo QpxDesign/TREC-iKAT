@@ -2,3 +2,4 @@ data/fastText/*
 output/*
 models/*
 llama2/*
+__pycache__/*
