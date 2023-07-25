@@ -1,11 +1,4 @@
-from scipy import spatial
-from numpy.linalg import norm
-import numpy as np
-from numpy.linalg import norm
-import json
-import random
 from sentence_transformers import SentenceTransformer, util
-import subprocess
 
 st_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 """

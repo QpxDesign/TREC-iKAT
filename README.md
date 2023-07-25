@@ -8,17 +8,17 @@
 - [Yake/Yet Another Keyword Extractor](https://github.com/LIAAD/yake) - a light-weight unsupervised automatic keyword extraction method which rests on text statistical features extracted from single documents to select the most important keywords of a text
 - [GPT-2 Large](https://huggingface.co/gpt2-large2) - Pretrained model on English language using a causal language modeling (CLM) objective, has autocomplete capabilities
 - [DQN TUTORIAL](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html) - This tutorial shows how to use PyTorch to train a Deep Q Learning (DQN) agent on the CartPole-v1 task from Gymnasium.
-- [LLAMA2](https://github.com/facebookresearch/llama) - large language model with a built-in chat model, on-par with ChatGPT (using 7B params chat rn) 
+- [LLAMA2](https://github.com/facebookresearch/llama) - large language model with a built-in chat model, on-par with ChatGPT (using 7B params chat rn)
 
 ### Notes:
 
-install pip dependencies: `pip install -r requirements.txt`
+install pip dependencies: `pip install -r requirements.txt` [MacOS instructions of llama.cpp python](https://llama-cpp-python.readthedocs.io/en/latest/install/macos/)
 
-login into hugging face CLI: `huggingface-cli login`   [Tutorial](https://huggingface.co/docs/huggingface_hub/quick-start)
+run `bash install-data.sh` to install llama model (13B-Chat) from my server (~8 GB)
 
-run `bash install-data.sh` to install fastText Data (~5 GB)
+running ptkb_similarity will download several BERT models (a few GB total)
 
-see a sample output for the releveance algorthim [here](https://docs.google.com/spreadsheets/d/1-VU4-3qC3Q7mTdF9iZUgs3RjQVbYGD9ixf2JdMcMJRc/edit?usp=sharing)
+you should be able to run this on any basically any CPU/OS/Architecture/With or without GPU
 
 ### Pipeline for Determining PTKB-Passage Simulatory
 
