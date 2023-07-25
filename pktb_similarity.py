@@ -1,14 +1,14 @@
-import fasttext
 from scipy import spatial
 from numpy.linalg import norm
-import yake
 import numpy as np
 from numpy.linalg import norm
 import json
 import random
+from sentence_transformers import SentenceTransformer, util
+import subprocess
 
-model = fasttext.load_model('./data/fastText/cc.en.300.bin')
-
+st_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
+"""
 def find_keywords(text):
     kw_extractor = yake.KeywordExtractor()
     keywords = kw_extractor.extract_keywords(text)
@@ -47,37 +47,29 @@ def keywordSim(PTKB, Question):
             if cs >= MATCHING_THRESHOLD:
                 total[PTKB_keyword[0] + "-" + question_keyword[0]] = cs
     return len(total)
+        """
+def transformerSim(statements, question):
+    print("QUESTION: " + question)
+    question_embedding = st_model.encode(question, convert_to_tensor=True)
+
+    statement_embeddings = st_model.encode(statements, convert_to_tensor=True)
+
+    cosine_scores = util.pytorch_cos_sim(question_embedding, statement_embeddings)
+
+    ranked_statements = sorted(
+        zip(statements, cosine_scores.tolist()[0]), key=lambda x: x[1], reverse=True
+    )
+
+    return ranked_statements 
+
+def rankPTKBS(PTKBs, Text):
+    # print(f"Sample Response: {turn['response']}")
+    a = transformerSim(PTKBs,Text) # Rank PTKBs from response (reverse-order)
+    return a
+
+
         
-def rankPTKBS():
-    file_name = random.randint(0,673786)
-    with open('./data/2023_train_topics.json', 'r') as f: 
-        data = json.load(f)
-        index = 0;
-        for item in data:
-            PTKBs = [None] * len(item['ptkb'])
-            for turn in item['turns']:
-               # print(f"Sample Response: {turn['response']}")
-
-                index = 0
-                while index < len(item['ptkb']):
-                    PTKBs[index] = item['ptkb'][str(index+1)]
-                    index += 1
-                scoredPTKB = {}
-                for ptkb in PTKBs:
-                    a = keywordSim(ptkb,turn["response"]) # Rank PTKBs from response (reverse-order)
-                    scoredPTKB[ptkb.replace(',','🔥')] = a
-                    
-                rankedPTKBS = sorted(scoredPTKB.items(), key=lambda x:x[1],reverse=True)
-                hitOnOneProv = False
-                for pktpRel in turn["ptkb_provenance"]:
-                    if (item['ptkb'][str(pktpRel)] == rankedPTKBS[0][0]):
-                        hitOnOneProv = print()
-                
-                    
-                with open(f"./output/{file_name}.csv", 'a') as f2:
-    
-                    f2.write(f"{turn['response'].replace(',','🔥')},{rankedPTKBS}  \n")
-                    f2.close()
+        
+        
 
                 
-rankPTKBS()

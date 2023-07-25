@@ -7,3 +7,5 @@ torch
 fairscale
 fire
 sentencepiece
+sentence-transformers
+scipy

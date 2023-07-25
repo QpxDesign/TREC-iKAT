@@ -12,6 +12,10 @@
 
 ### Notes:
 
+install pip dependencies: `pip install -r requirements.txt`
+
+login into hugging face CLI: `huggingface-cli login`   [Tutorial](https://huggingface.co/docs/huggingface_hub/quick-start)
+
 run `bash install-data.sh` to install fastText Data (~5 GB)
 
 see a sample output for the releveance algorthim [here](https://docs.google.com/spreadsheets/d/1-VU4-3qC3Q7mTdF9iZUgs3RjQVbYGD9ixf2JdMcMJRc/edit?usp=sharing)
