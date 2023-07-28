@@ -4,3 +4,4 @@ output/*
 models/*
 llama2/*
 __pycache__/*
+indexes/*
