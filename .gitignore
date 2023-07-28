@@ -1,4 +1,5 @@
 data/fastText/*
+data/clueweb/*
 output/*
 models/*
 llama2/*

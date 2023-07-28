@@ -20,17 +20,7 @@ running ptkb_similarity will download several BERT models (a few GB total)
 
 you should be able to run this on any basically any CPU/OS/Architecture/With or without GPU
 
-### Pipeline for Determining PTKB-Passage Simulatory
-
-[Find Keywords in PTKB & Response] → [determine cosine similarity between keywords] → [rank passages by similarity]
-
-### Pipeline for GPT Generation
-
-_[user input]_ -> **[derive auto-completable string]** -> [generate sequences] -> [score w/ Q function] -> [return a higher-scoring sequences]
-
-_italics_ = implemented \
-**bold** = working on
-
-### Pipeline for DQN
-
-How to use a DQN (Deep-Q Network): The neural network takes the current state of the environment as input and outputs a Q-value for each possible action. The agent then selects the action with the highest Q-value to maximize its rewards.
+#### Running Pyserini with clueweb22
+1. Place ikat collections (named `ikat_collection_2023_0n.json`) into /data/clueweb/
+2. Format by running `bash format_ikat_collection.sh` (this will take a long time)
+3. Generate the index: `python -m pyserini.index.lucene --collection JsonCollection  --input ~/TREC-iKAT/data/clueweb --index indexes/ikat_collection_2023_02  --generator DefaultLuceneDocumentGenerator  --threads 1  --storePositions --storeDocvectors --storeRaw`
