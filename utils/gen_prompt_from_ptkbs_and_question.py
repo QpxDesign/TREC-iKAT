@@ -1,5 +1,5 @@
 
-def genPromptFromPTKBAndQuestion(PTKBs, question):
+def gen(PTKBs, question):
     prompt_pktbs = []
     for d in PTKBs:
         prompt_pktbs.append(d[0])

@@ -1,5 +1,5 @@
 from llama_cpp import Llama
-llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin")
+llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin", n_ctx=10240)
 
 def gen_response(prompt,previous_chats):
     full_prompt = ""
