@@ -1,29 +1,76 @@
-import llama2
-import pktb_similarity
+import utils.llama2 as llama2
+import utils.pktb_similarity as pktb_similarity
+import utils.gen_prompt_from_ptkbs_and_question
+import utils.trim_PTKB
+import utils.json_ptkb_dict_to_array
+import utils.get_passages
 import json
-import time 
+import sys
+import time
+sys.path.append('../')
 
 def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs from )
-    data = {}
-    PTKBs = [None] * len(topic_obj['ptkb'])
-    index = 0
-    while index < len(topic_obj['ptkb']):
-        PTKBs[index] = topic_obj['ptkb'][str(index+1)]
-        index += 1
-    turn_index = 2
-    a = pktb_similarity.rankPTKBS(PTKBs,topic_obj["turns"][turn_index]["resolved_utterance"])
-    data["user utterance"] = topic_obj["turns"][turn_index]["resolved_utterance"]
-    data["ranked_ptkbs"] = a
-    # potential threshold: = .7
-    filename = f"run-{time.time()}.json"
-    print(data["ranked_ptkbs"])
-    a = llama2.gen_response(topic_obj["turns"][turn_index]["resolved_utterance"],topic_obj["turns"][0:turn_index])
-    print(a)
-    with open(f"./output/{filename}", 'a') as f2:
-        f2.write(json.dumps(data))
+    PTKBs = utils.json_ptkb_dict_to_array.format(topic_obj)
+    turn_index = 0
+    ouput = {
+        "run_name":"georgetown_infosense_run",
+        "run_type": "automatic",
+        "turns" : []
+    }
+    turn_outputs = []
+    for obj in topic_obj["turns"]:
+        a = pktb_similarity.rankPTKBS(PTKBs,obj["resolved_utterance"])
+        ranked_ptkbs = utils.trim_PTKB.trim(a)
+
+        prompt = utils.gen_prompt_from_ptkbs_and_question.gen(ranked_ptkbs,obj["resolved_utterance"])
+        print("prompt: " + prompt)
+        b = llama2.gen_response(prompt,topic_obj["turns"][0:turn_index])
+        print(b)
+        ptkb_provenance_objs = []
+        for ptkb in ranked_ptkbs:
+            ptkb_provenance_objs.append({
+                "id": PTKBs.index(ptkb[0]),
+                "text":ptkb,
+                "score":ptkb[1]
+
+            })
+        passage_provenance_objs = []
+        passages = utils.get_passages.getPassagesFromSearchQuery(obj["resolved_utterance"])
+        for passage in passages:
+            passage_provenance_objs.append({
+                "id":passage.docid,
+                "text":json.loads(passage.raw)["contents"],
+                "score":passage.score
+            })
+        turn_outputs.append({
+            "turn_id":f"{topic_obj['number']}_{obj['turn_id']}",
+            "responses": [
+                {
+                    "rank":1,
+                    "text":b,
+                    "ptkb_provenance":ptkb_provenance_objs,
+                    "passage_provenance":passage_provenance_objs
+                }
+
+            ]
+        })
+        turn_index += 1
+        print(f"STATUS UPDATE: FINISHED TURN {turn_index}/{len(topic_obj['turns'])} - TOPIC {topic_obj['number']} @ {time.strftime('%H:%M:%S')}")
+    
+    return turn_outputs
+
+        
+
 
 if __name__ == '__main__':
-    with open('./data/2023_train_topics.json', 'r') as f: 
+    with open('./data/2023_test_topics.json', 'r') as f: 
         data = json.load(f)
         index = 0
-        run(data[index])
+        final = []
+        for o in data:
+            final.append(run(o))
+        filename = f"run-{time.time()}.json"
+        with open(f"./output/{filename}", 'a') as f2:
+            f2.write(json.dumps(final))
+
+        

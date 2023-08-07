@@ -14,13 +14,14 @@
 
 install pip dependencies: `pip install -r requirements.txt` [MacOS instructions of llama.cpp python](https://llama-cpp-python.readthedocs.io/en/latest/install/macos/)
 
-run `bash install-data.sh` to install llama model (13B-Chat) from my server (~8 GB)
+run `bash scripts/install-data.sh` to install llama model (13B-Chat) from my server (~8 GB)
 
 running ptkb_similarity will download several BERT models (a few GB total)
 
 you should be able to run this on any basically any CPU/OS/Architecture/With or without GPU
 
 #### Running Pyserini with clueweb22
+
 1. Place ikat collections (named `ikat_collection_2023_0n.json`) into /data/clueweb/
-2. Format by running `bash format_ikat_collection.sh` (this will take a long time)
+2. Format by running `bash scripts/format_ikat_collection.sh` (this will take a long time)
 3. Generate the index: `python -m pyserini.index.lucene --collection JsonCollection  --input ~/TREC-iKAT/data/clueweb --index indexes/ikat_collection_2023_02  --generator DefaultLuceneDocumentGenerator  --threads 1  --storePositions --storeDocvectors --storeRaw` (a few JSON objs have formatting issues and will error out, but the index will be built with 99.99%+ of the data)
