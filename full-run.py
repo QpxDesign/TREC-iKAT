@@ -7,9 +7,13 @@ import utils.get_passages
 import json
 import sys
 import time
+from humanize import naturaltime
 sys.path.append('../')
 
+start_time = time.time()
+total_turns = 0
 def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs from )
+    global total_turns
     PTKBs = utils.json_ptkb_dict_to_array.format(topic_obj)
     turn_index = 0
     ouput = {
@@ -19,9 +23,11 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
     }
     turn_outputs = []
     for obj in topic_obj["turns"]:
+        total_turns += 1
+
         a = pktb_similarity.rankPTKBS(PTKBs,obj["resolved_utterance"])
         ranked_ptkbs = utils.trim_PTKB.trim(a)
-
+        
         prompt = utils.gen_prompt_from_ptkbs_and_question.gen(ranked_ptkbs,obj["resolved_utterance"])
         print("prompt: " + prompt)
         b = llama2.gen_response(prompt,topic_obj["turns"][0:turn_index])
@@ -35,7 +41,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
 
             })
         passage_provenance_objs = []
-        passages = utils.get_passages.getPassagesFromSearchQuery(obj["resolved_utterance"])
+        passages = utils.get_passages.getPassagesFromSearchQuery(b)
         for passage in passages:
             passage_provenance_objs.append({
                 "id":passage.docid,
@@ -55,7 +61,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
             ]
         })
         turn_index += 1
-        print(f"STATUS UPDATE: FINISHED TURN {turn_index}/{len(topic_obj['turns'])} - TOPIC {topic_obj['number']} @ {time.strftime('%H:%M:%S')}")
+        print(f"STATUS UPDATE: FINISHED TURN {turn_index}/{len(topic_obj['turns'])} - TOPIC {topic_obj['number']} @ {naturaltime(time.time()-start_time)} - {total_turns}/332 DONE")
     
     return turn_outputs
 
