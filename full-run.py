@@ -7,7 +7,6 @@ import utils.get_passages
 import json
 import sys
 import time
-import utils.format_duration
 sys.path.append('../')
 
 start_time = time.time()
@@ -62,7 +61,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
             ]
         })
         turn_index += 1
-        print(f"STATUS UPDATE: FINISHED TURN {turn_index}/{len(topic_obj['turns'])} - TOPIC {topic_obj['number']} @ {utils.format_duration.format(time.time()-start_time)} - {total_turns}/332 DONE")
+        print(f"STATUS UPDATE: FINISHED TURN {turn_index}/{len(topic_obj['turns'])} - TOPIC {topic_obj['number']} @ {(time.time()-start_time)/60}min elapsed - {total_turns}/332 DONE")
     
     return turn_outputs
 
