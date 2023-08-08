@@ -7,7 +7,6 @@ import utils.get_passages
 import json
 import sys
 import time
-from humanize import naturaltime
 sys.path.append('../')
 
 start_time = time.time()
@@ -33,6 +32,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
         b = llama2.gen_response(prompt,topic_obj["turns"][0:turn_index])
         print(b)
         ptkb_provenance_objs = []
+        
         for ptkb in ranked_ptkbs:
             ptkb_provenance_objs.append({
                 "id": PTKBs.index(ptkb[0]),
@@ -61,7 +61,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
             ]
         })
         turn_index += 1
-        print(f"STATUS UPDATE: FINISHED TURN {turn_index}/{len(topic_obj['turns'])} - TOPIC {topic_obj['number']} @ {naturaltime(time.time()-start_time)} - {total_turns}/332 DONE")
+        print(f"STATUS UPDATE: FINISHED TURN {turn_index}/{len(topic_obj['turns'])} - TOPIC {topic_obj['number']} @ {(time.time()-start_time)/60}min elapsed - {total_turns}/332 DONE")
     
     return turn_outputs
 
