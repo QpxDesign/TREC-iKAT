@@ -3,3 +3,4 @@ def trim(PTKBs):
     for i in range(len(PTKBs)):
         if PTKBs[i][1] < cutoffValue:
             return PTKBs[0:i]
+    return PTKBs

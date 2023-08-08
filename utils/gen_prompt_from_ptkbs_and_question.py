@@ -1,6 +1,8 @@
 
 def gen(PTKBs, question):
     prompt_pktbs = []
+    if PTKBs is None:
+        return question
     for d in PTKBs:
         prompt_pktbs.append(d[0])
     prmpt = ""
