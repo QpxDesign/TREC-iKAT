@@ -15,11 +15,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
     global total_turns
     PTKBs = utils.json_ptkb_dict_to_array.format(topic_obj)
     turn_index = 0
-    ouput = {
-        "run_name":"georgetown_infosense_run",
-        "run_type": "automatic",
-        "turns" : []
-    }
+ 
     turn_outputs = []
     for obj in topic_obj["turns"]:
         total_turns += 1
@@ -72,11 +68,15 @@ if __name__ == '__main__':
     with open('./data/2023_test_topics.json', 'r') as f: 
         data = json.load(f)
         index = 0
-        final = []
+        output = {
+            "run_name":"georgetown_infosense_run",
+            "run_type": "automatic",
+            "turns" : []
+        }
         for o in data:
-            final.append(run(o))
+            output['turns'] + run(o)
         filename = f"run-{time.time()}.json"
         with open(f"./output/{filename}", 'a') as f2:
-            f2.write(json.dumps(final))
+            f2.write(json.dumps(output))
 
         
