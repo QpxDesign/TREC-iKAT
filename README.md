@@ -16,11 +16,13 @@ install pip dependencies: `pip install -r requirements.txt` [MacOS instructions 
 
 run `bash scripts/install-data.sh` to install llama model (13B-Chat) from my server (~8 GB)
 
-run `python3 -m fastchat.serve.cli --model-path lmsys/fastchat-t5-3b-v1.0` to install fastchat-t5 model (~7 GB)
+run `python3 -m fastchat.serve.cli --model-path lmsys/fastchat-t5-3b-v1.0` to install fastchat-t5 model (~7 GB) (CURRENTLY NOT USED)
 
-running ptkb_similarity will download several BERT models (a few GB total)
+running ptkb_similarity or rank_passage_sentances (both are run in full-run) will download several BERT models (a few GB total)
 
 you should be able to run this on any basically any CPU/OS/Architecture/With or without GPU
+
+set PYTHON_PATH variable: `export PYTHONPATH=$PWD:$PYTHONPATH`
 
 #### Running Pyserini with clueweb22
 
