@@ -2,12 +2,13 @@ import utils.llama2 as llama2
 import utils.pktb_similarity as pktb_similarity
 import utils.gen_prompt_from_ptkbs_and_question
 import utils.trim_PTKB
+from utils.trim_passages import trim_passages
 import utils.json_ptkb_dict_to_array
 import utils.get_passages
 import json
-import sys
 import time
-sys.path.append('../')
+import sys
+import math
 
 start_time = time.time()
 total_turns = 0
@@ -38,18 +39,23 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
             })
         passage_provenance_objs = []
         passages = utils.get_passages.getPassagesFromSearchQuery(b)
+        passages = trim_passages(passages)
+        combined_passage_summaries = ""
         for passage in passages:
+            combined_passage_summaries += f"{llama2.gen_summary(json.loads(passage.raw)['contents'])} "
             passage_provenance_objs.append({
                 "id":passage.docid,
                 "text":json.loads(passage.raw)["contents"],
                 "score":passage.score
             })
+        final_ans = answer_question_from_passage(passage=combined_passage_summaries, queston=prompt)
         turn_outputs.append({
             "turn_id":f"{topic_obj['number']}_{obj['turn_id']}",
             "responses": [
                 {
                     "rank":1,
-                    "text":b,
+                    "generated_prompt": prompt,
+                    "text":final_ans,
                     "ptkb_provenance":ptkb_provenance_objs,
                     "passage_provenance":passage_provenance_objs
                 }
@@ -57,7 +63,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
             ]
         })
         turn_index += 1
-        print(f"STATUS UPDATE: FINISHED TURN {turn_index}/{len(topic_obj['turns'])} - TOPIC {topic_obj['number']} @ {(time.time()-start_time)/60}min elapsed - {total_turns}/332 DONE")
+        print(f"STATUS UPDATE: FINISHED TURN {turn_index}/{len(topic_obj['turns'])} - TOPIC {topic_obj['number']} @ {math.floor((time.time()-start_time)/60)}min elapsed - {total_turns}/332 DONE")
     
     return turn_outputs
 
