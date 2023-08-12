@@ -7,6 +7,8 @@ def getPassagesFromSearchQuery(query):
     hits = searcher.search(query)
     return hits
 
+"""
 a = getPassagesFromSearchQuery("What are some good colleges for computer science in the netherlands?")[0]
 b = json.loads(a.raw)["contents"]
 print(b)
+"""

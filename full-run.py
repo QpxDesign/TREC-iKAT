@@ -42,7 +42,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
         passages = trim_passages(passages)
         combined_passage_summaries = ""
         for passage in passages:
-            combined_passage_summaries += f"{llama2.gen_summary(json.loads(passage.raw)['contents'])} "
+            combined_passage_summaries += f"{llama2.gen_summary(json.loads(passage.raw)['contents'],prompt)} "
             passage_provenance_objs.append({
                 "id":passage.docid,
                 "text":json.loads(passage.raw)["contents"],
