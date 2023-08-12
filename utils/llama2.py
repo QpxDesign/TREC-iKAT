@@ -1,10 +1,9 @@
 from llama_cpp import Llama
-llm = Llama(model_path="../models/llama-2-13b-chat.ggmlv3.q4_1.bin", n_ctx=10240)
-#llm = Llama(model_path="./models/llama-2-70b-chat.ggmlv3.q4_1.bin", n_ctx=10240)
-from rank_passage_sentances import rank
 import sys
+llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin", n_ctx=10240)
+#llm = Llama(model_path="./models/llama-2-70b-chat.ggmlv3.q4_1.bin", n_ctx=10240)
+from utils.rank_passage_sentances import rank
 import time
-sys.path.append('../')
 
 def gen_response(prompt,previous_chats):
     full_prompt = ""
@@ -12,7 +11,7 @@ def gen_response(prompt,previous_chats):
         full_prompt += f"Q: {pc['resolved_utterance']} A: {pc['response']}"
 
     full_prompt += f" Q: {prompt} A: "
-    output = llm(full_prompt,max_tokens=250, stop=["Q:"], echo=True) # 250 tokens is TREC iKAT limit
+    output = llm(full_prompt,max_tokens=1024, stop=["Q:"], echo=True) # 250 tokens is TREC iKAT limit
     ans = output["choices"][-1]["text"]
     ans = ans.split(" A: ")[-1]
     return ans
@@ -29,7 +28,7 @@ def gen_summary(passage,question):
 def answer_question_from_passage(passage,question):
     summary = gen_summary(passage,question)
     print(summary)
-    prompt = f"Answer this question {question} using information from the passage - {summary}"
+    prompt = f"Answer this question {question} using information from these passages - {summary}"
     output = llm(prompt,max_tokens=250, stop=["Q:"], echo=True)
     ans = output["choices"][-1]["text"]
     ans = ans.split(" A: ")[-1]

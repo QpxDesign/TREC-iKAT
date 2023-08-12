@@ -1,4 +1,5 @@
 from sentence_transformers import SentenceTransformer, util
+import sys
 st_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
 def rank(passage, question):
