@@ -1,6 +1,6 @@
 from sentence_transformers import SentenceTransformer, util
 import sys
-st_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
+st_model = SentenceTransformer('paraphrase-MiniLM-L6-v2',device='cuda')
 
 def rank(passage, question):
     MAX_SENTANCES = 50

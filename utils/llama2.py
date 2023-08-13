@@ -1,6 +1,6 @@
 from llama_cpp import Llama
 import sys
-llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin", n_ctx=10240)
+llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin", n_ctx=10240, n_threads=16)
 #llm = Llama(model_path="./models/llama-2-70b-chat.ggmlv3.q4_1.bin", n_ctx=10240)
 from utils.rank_passage_sentances import rank
 import time
@@ -22,13 +22,19 @@ def gen_summary(passage,question):
     output = llm(prompt,max_tokens=250, stop=["Q:"], echo=True)
     ans = output["choices"][-1]["text"]
     ans = ans.split(" A: ")[-1]
+    ans = ans.replace("Sure! Here is a summary of the passage in one sentence:",'')
     ans = ans.replace('Here is a summary of the passage in one sentence:','')
+    ans = ans.replace('Here is the summary in one sentence based on the information from the passages:')
     return ans
 
 def answer_question_from_passage(passage,question):
     summary = gen_summary(passage,question)
-    prompt = f"Answer this question {question} using information from these passages - {summary}"
+    prompt = f"Q: Answer this question {question} using information from these passages - {summary} A:"
     output = llm(prompt,max_tokens=250, stop=["Q:"], echo=True)
     ans = output["choices"][-1]["text"]
     ans = ans.split(" A: ")[-1]
+    ans = ans.replace("Sure! Here is a summary of the passage in one sentence:",'')
+    ans = ans.replace('Here is a summary of the passage in one sentence:','')
+    ans = ans.replace('Here is the summary in one sentence based on the information from the passages:')
+    ans = ans.replace("\n","")
     return ans

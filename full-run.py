@@ -7,7 +7,6 @@ import utils.json_ptkb_dict_to_array
 import utils.get_passages
 import json
 import time
-import sys
 import math
 
 start_time = time.time()
@@ -27,7 +26,6 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
         prompt = utils.gen_prompt_from_ptkbs_and_question.gen(ranked_ptkbs,obj["resolved_utterance"])
         print("prompt: " + prompt)
         b = llama2.gen_response(prompt,topic_obj["turns"][0:turn_index])
-        print(b)
         ptkb_provenance_objs = []
         
         for ptkb in ranked_ptkbs:
@@ -48,7 +46,8 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
                 "text":json.loads(passage.raw)["contents"],
                 "score":passage.score
             })
-        final_ans = answer_question_from_passage(passage=combined_passage_summaries, queston=prompt)
+        final_ans = llama2.answer_question_from_passage(combined_passage_summaries, prompt)
+        print(f"Final Answer: {final_ans}")
         turn_outputs.append({
             "turn_id":f"{topic_obj['number']}_{obj['turn_id']}",
             "responses": [
@@ -63,7 +62,8 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
             ]
         })
         turn_index += 1
-        print(f"STATUS UPDATE: FINISHED TURN {turn_index}/{len(topic_obj['turns'])} - TOPIC {topic_obj['number']} @ {math.floor((time.time()-start_time)/60)}min elapsed - {total_turns}/332 DONE")
+        runtime_min = math.floor((time.time()-start_time)/60)
+        print(f"STATUS UPDATE: FINISHED TURN {turn_index}/{len(topic_obj['turns'])} - TOPIC {topic_obj['number']} @ {runtime_min}min elapsed - {total_turns}/332 DONE (EST. {math.floor((runtime_min/(total_turns + .00001)) * 332)}min remaining)")
     
     return turn_outputs
 
@@ -80,8 +80,9 @@ if __name__ == '__main__':
             "turns" : []
         }
         for o in data:
-            output['turns'] + run(o)
-        filename = f"run-{time.time()}.json"
+            output['turns'] += run(o)
+        #output = run(data[index])
+        filename = f"AUG13_BEST_2.json"
         with open(f"./output/{filename}", 'a') as f2:
             f2.write(json.dumps(output))
 

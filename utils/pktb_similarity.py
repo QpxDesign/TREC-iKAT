@@ -1,6 +1,6 @@
 from sentence_transformers import SentenceTransformer, util
 
-st_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
+st_model = SentenceTransformer('paraphrase-MiniLM-L6-v2',device='cuda')
 """
 def find_keywords(text):
     kw_extractor = yake.KeywordExtractor()
