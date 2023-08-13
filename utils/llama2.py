@@ -4,6 +4,7 @@ llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin", n_ctx=10240,
 #llm = Llama(model_path="./models/llama-2-70b-chat.ggmlv3.q4_1.bin", n_ctx=10240)
 from utils.rank_passage_sentances import rank
 import time
+import re
 
 def gen_response(prompt,previous_chats):
     full_prompt = ""
@@ -24,7 +25,7 @@ def gen_summary(passage,question):
     ans = ans.split(" A: ")[-1]
     ans = ans.replace("Sure! Here is a summary of the passage in one sentence:",'')
     ans = ans.replace('Here is a summary of the passage in one sentence:','')
-    ans = ans.replace('Here is the summary in one sentence based on the information from the passages:')
+    ans = ans.replace('Here is the summary in one sentence based on the information from the passages:','')
     return ans
 
 def answer_question_from_passage(passage,question):
@@ -35,6 +36,16 @@ def answer_question_from_passage(passage,question):
     ans = ans.split(" A: ")[-1]
     ans = ans.replace("Sure! Here is a summary of the passage in one sentence:",'')
     ans = ans.replace('Here is a summary of the passage in one sentence:','')
-    ans = ans.replace('Here is the summary in one sentence based on the information from the passages:')
+    ans = ans.replace('Here is the summary in one sentence based on the information from the passages:','')
     ans = ans.replace("\n","")
-    return ans
+    return prevent_trail_off(ans)
+
+def prevent_trail_off(response):
+    if re.match("[1-9]\.\d*|\d+\.",response.replace(":",".")): #checks if it's listing off things
+        matches = re.findall("[1-9]\.\d*|\d+\.",response)
+        r = response.split(matches[-1])
+        return r[0]
+    else:
+        return re.sub('\.[^.]*$','.',response)
+
+    

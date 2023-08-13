@@ -63,7 +63,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
         })
         turn_index += 1
         runtime_min = math.floor((time.time()-start_time)/60)
-        print(f"STATUS UPDATE: FINISHED TURN {turn_index}/{len(topic_obj['turns'])} - TOPIC {topic_obj['number']} @ {runtime_min}min elapsed - {total_turns}/332 DONE (EST. {math.floor((runtime_min/(total_turns + .00001)) * 332)}min remaining)")
+        print(f"STATUS UPDATE: FINISHED TURN {turn_index}/{len(topic_obj['turns'])} - TOPIC {topic_obj['number']} @ {runtime_min}min elapsed - {total_turns}/332 DONE (EST. {math.floor((runtime_min/(total_turns + .00001)) * (332-total_turns))}min remaining)")
     
     return turn_outputs
 
