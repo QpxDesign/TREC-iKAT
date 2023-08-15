@@ -32,4 +32,4 @@ set PYTHON_PATH variable: `export PYTHONPATH=$PWD:$PYTHONPATH`
 
 #### Helpful Commands
 
-Format output JSON `cat output/<RUN_NAME>.json | python -m json.tool > output/<RUN_NAME>_F.json`
+Format output JSON `cat output/AUG13_BEST_2.json | python -m json.tool > output/AUG13_BEST_2_F.json`

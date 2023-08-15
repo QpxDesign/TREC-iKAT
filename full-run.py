@@ -8,6 +8,7 @@ import utils.get_passages
 import json
 import time
 import math
+from utils.fastchat import summarize_with_fastchat
 
 start_time = time.time()
 total_turns = 0
@@ -38,9 +39,10 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
         passage_provenance_objs = []
         passages = utils.get_passages.getPassagesFromSearchQuery(b)
         passages = trim_passages(passages)
+        print("GOT PASSAGES")
         combined_passage_summaries = ""
         for passage in passages:
-            combined_passage_summaries += f"{llama2.gen_summary(json.loads(passage.raw)['contents'],prompt)} "
+            combined_passage_summaries += f"{summarize_with_fastchat(json.loads(passage.raw)['contents'],prompt)} "
             passage_provenance_objs.append({
                 "id":passage.docid,
                 "text":json.loads(passage.raw)["contents"],
@@ -82,7 +84,7 @@ if __name__ == '__main__':
         for o in data:
             output['turns'] += run(o)
         #output = run(data[index])
-        filename = f"AUG13_BEST_2.json"
+        filename = f"AUG15_BEST.json"
         with open(f"./output/{filename}", 'a') as f2:
             f2.write(json.dumps(output))
 
