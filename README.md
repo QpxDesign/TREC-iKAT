@@ -28,7 +28,7 @@ set PYTHON_PATH variable: `export PYTHONPATH=$PWD:$PYTHONPATH`
 
 1. Place ikat collections (named `ikat_collection_2023_0n.json`) into /data/clueweb/
 2. Format by running `bash scripts/format_ikat_collection.sh` (this will take a long time)
-3. Generate the index: `python -m pyserini.index.lucene --collection JsonCollection  --input ~/TREC-iKAT/data/clueweb --index indexes/ikat_collection_2023_02  --generator DefaultLuceneDocumentGenerator  --threads 1  --storePositions --storeDocvectors --storeRaw` (a few JSON objs have formatting issues and will error out, but the index will be built with 99.99%+ of the data)
+3. Generate the index: `python -m pyserini.index.lucene --collection JsonCollection  --input ~/TREC-iKAT/data/clueweb --index indexes/ikat_collection_2023  --generator DefaultLuceneDocumentGenerator  --threads 1  --storePositions --storeDocvectors --storeRaw` (a few JSON objs have formatting issues and will error out, but the index will be built with 99.99%+ of the data)
 
 #### Helpful Commands
 

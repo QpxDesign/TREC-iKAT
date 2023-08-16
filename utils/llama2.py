@@ -13,7 +13,7 @@ def gen_response(prompt,previous_chats):
 
     full_prompt += f" Q: {prompt} A: "
     print(f'generating response: {full_prompt}')
-    output = llm(full_prompt,max_tokens=256, stop=["Q:",'\n'], echo=True) 
+    output = llm(full_prompt,max_tokens=256, stop=["Q:"], echo=True) 
     print(output)
     ans = output["choices"][-1]["text"]
     ans = ans.split(" A: ")[-1]
@@ -22,7 +22,7 @@ def gen_response(prompt,previous_chats):
 def gen_summary(passage,question):
     MAX_PASSAGE_LENGTH = 512 #num characters
     prompt = f"Q: Summarize this passage in 1 sentence: {rank(passage, question)[:MAX_PASSAGE_LENGTH]} A: "
-    output = llm(prompt,max_tokens=250, stop=["Q:",'\n'], echo=True)
+    output = llm(prompt,max_tokens=250, stop=["Q:"], echo=True)
     ans = output["choices"][-1]["text"]
     ans = ans.split(" A: ")[-1]
     ans = ans.replace("Sure! Here is a summary of the passage in one sentence:",'')
@@ -31,8 +31,8 @@ def gen_summary(passage,question):
     return ans
 
 def answer_question_from_passage(passage,question):
-    prompt = f"Q: Answer this question {question} using information from these passages - {passage} A: "
-    output = llm(prompt,max_tokens=250, stop=["Q:",'\n'], echo=True)
+    prompt = f"Q: Answer this question '{question}' using this information - '{passage}' and your own knowledge. Your response should mimic a voice assistant response. A: "
+    output = llm(prompt,max_tokens=250, stop=["Q:"], echo=True)
     ans = output["choices"][-1]["text"]
     ans = ans.split(" A: ")[-1]
     ans = ans.replace("Sure! Here is a summary of the passage in one sentence:",'')

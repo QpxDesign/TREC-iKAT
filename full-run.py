@@ -26,7 +26,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
         
         prompt = utils.gen_prompt_from_ptkbs_and_question.gen(ranked_ptkbs,obj["resolved_utterance"])
         print("prompt: " + prompt)
-        b = llama2.gen_response(prompt,topic_obj["turns"][0:turn_index])
+        #b = llama2.gen_response(prompt,topic_obj["turns"][0:turn_index])
         ptkb_provenance_objs = []
         
         for ptkb in ranked_ptkbs:
@@ -37,7 +37,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
 
             })
         passage_provenance_objs = []
-        passages = utils.get_passages.getPassagesFromSearchQuery(b)
+        passages = utils.get_passages.getPassagesFromSearchQuery(obj["resolved_utterance"])
         passages = trim_passages(passages)
         print("GOT PASSAGES")
         combined_passage_summaries = ""
@@ -57,6 +57,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
                     "rank":1,
                     "generated_prompt": prompt,
                     "text":final_ans,
+                    "combined_passage_summaries":combined_passage_summaries,
                     "ptkb_provenance":ptkb_provenance_objs,
                     "passage_provenance":passage_provenance_objs
                 }

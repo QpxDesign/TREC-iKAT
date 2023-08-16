@@ -3,7 +3,6 @@ import sys
 st_model = SentenceTransformer('paraphrase-MiniLM-L6-v2',device='cuda')
 
 def rank(passage, question):
-    MAX_SENTANCES = 50
     def merge_sentances_into_paragraph(sentances):
         ans = ""
         for s in sentances:
@@ -20,4 +19,4 @@ def rank(passage, question):
     ranked_statements = sorted(
         zip(sentances, cosine_scores.tolist()[0]), key=lambda x: x[1], reverse=True
     )
-    return merge_sentances_into_paragraph(ranked_statements[:MAX_SENTANCES])
+    return merge_sentances_into_paragraph(ranked_statements)

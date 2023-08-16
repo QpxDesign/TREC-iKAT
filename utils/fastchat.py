@@ -8,7 +8,7 @@ tokenizer = AutoTokenizer.from_pretrained("lmsys/fastchat-t5-3b-v1.0", legacy=Fa
 model = AutoModelForSeq2SeqLM.from_pretrained("lmsys/fastchat-t5-3b-v1.0")
 
 def summarize_with_fastchat(passage,question):
-    MAX_PASSAGE_LENGTH = 256 #char
+    MAX_PASSAGE_LENGTH = 512 #char
     passage = f"Human: Summarize this passage in 1-2 sentences {rank(passage, question)[:MAX_PASSAGE_LENGTH]} Assistant: "  # Ensure the task is properly formatted
     print("GENERATING FASTCHAT SUMMARY")
     encoded_input = tokenizer.encode(passage, return_tensors='pt')
