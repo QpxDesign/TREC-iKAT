@@ -6,3 +6,4 @@ scipy
 llama-cpp-python
 faiss-cpu
 transformers
+scikit-learn
