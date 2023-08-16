@@ -4,10 +4,9 @@
 
 ### Resources
 
-- [FastText](https://github.com/facebookresearch/fastText) - a library for efficient learning of word representations and sentence classification.
-- [Yake/Yet Another Keyword Extractor](https://github.com/LIAAD/yake) - a light-weight unsupervised automatic keyword extraction method which rests on text statistical features extracted from single documents to select the most important keywords of a text
-- [GPT-2 Large](https://huggingface.co/gpt2-large2) - Pretrained model on English language using a causal language modeling (CLM) objective, has autocomplete capabilities
-- [DQN TUTORIAL](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html) - This tutorial shows how to use PyTorch to train a Deep Q Learning (DQN) agent on the CartPole-v1 task from Gymnasium.
+- [FastChat T5](https://huggingface.co/lmsys/fastchat-t5-3b-v1.0) - large language model thats much better at summarization than LLAMA2
+- [Sentance-Transformers](https://www.sbert.net/) - a Python framework for state-of-the-art sentence, text and image embeddings, based on BERT
+- [Pyserini](https://github.com/castorini/pyserini) - a Python toolkit for reproducible information retrieval research with sparse and dense representations (currently using to get passages from query, using BM25-based searcher)
 - [LLAMA2](https://github.com/facebookresearch/llama) - large language model with a built-in chat model, on-par with ChatGPT (using 7B params chat rn)
 
 ### Notes:

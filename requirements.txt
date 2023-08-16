@@ -4,6 +4,5 @@ sentencepiece
 sentence-transformers
 scipy
 llama-cpp-python
-humanize
 faiss-cpu
 transformers
