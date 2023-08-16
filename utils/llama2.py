@@ -3,6 +3,7 @@ import sys
 llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin", n_ctx=10240, n_threads=16)
 #llm = Llama(model_path="./models/llama-2-70b-chat.ggmlv3.q4_1.bin", n_ctx=10240)
 from utils.rank_passage_sentances import rank
+from utils.prevent_trail_off import prevent_trail_off
 import time
 import re
 
@@ -31,8 +32,10 @@ def gen_summary(passage,question):
     return ans
 
 def answer_question_from_passage(passage,question):
-    prompt = f"Q: Answer this question '{question}' using this information - '{passage}' and your own knowledge. Your response should mimic a voice assistant response. A: "
+    prompt = f"Q: Answer this question - {question} - using this information - {remove_extra_spaces(passage)} and your own knowledge. A: "
+    print(remove_extra_spaces(passage))
     output = llm(prompt,max_tokens=250, stop=["Q:"], echo=True)
+    print(output)
     ans = output["choices"][-1]["text"]
     ans = ans.split(" A: ")[-1]
     ans = ans.replace("Sure! Here is a summary of the passage in one sentence:",'')
@@ -42,12 +45,8 @@ def answer_question_from_passage(passage,question):
     ans = ans.replace("\n","")
     return prevent_trail_off(ans)
 
-def prevent_trail_off(response):
-    if re.match("[1-9]\.\d*|\d+\.",response.replace(":",".")): #checks if it's listing off things
-        matches = re.findall("[1-9]\.\d*|\d+\.",response)
-        r = response.split(matches[-1])
-        return r[0]
-    else:
-        return re.sub('\.[^.]*$','.',response)
+def remove_extra_spaces(input_string):
+    cleaned_string = re.sub(r'\s+', ' ', input_string)
+    cleaned_string = cleaned_string.replace("\n","")
+    return cleaned_string
 
-    
