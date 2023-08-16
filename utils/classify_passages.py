@@ -3,8 +3,13 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 import re
-from utils.get_passages import getPassagesFromSearchQuery
+from pyserini.search.lucene import LuceneSearcher
 import json
+
+searcher = LuceneSearcher('data/clueweb/indexes/ikat_collection_2023_02') #indexes/ikat_collection_2023_01
+def getPassagesFromSearchQuery(query, maxNumberPassages=10):
+    hits = searcher.search(q=query,k=maxNumberPassages)
+    return hits
 
 features = []
 labels = []

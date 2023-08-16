@@ -1,5 +1,5 @@
 def trim_passages(passages):
-    return passages[:3]
+    return passages[:5]
     """
     cutoffValue = 30 # TO-DO: FIND GOOD CUT OFF VALUE
     for i in range(len(passages)):
