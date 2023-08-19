@@ -25,7 +25,9 @@ you should be able to run this on any basically any CPU/OS/Architecture/With or 
 
 set PYTHON_PATH variable: `export PYTHONPATH=$PWD:$PYTHONPATH`
 
-install wikitext-103 from [Cloudflare Einstien](https://s3.amazonaws.com/research.metamind.io/wikitext/wikitext-103-v1.zip) (~600MB Uncompressed), unzip it, and drag it into data/text-classification
+install wikitext-103 from [Cloudflare Einstien](https://s3.amazonaws.com/research.metamind.io/wikitext/wikitext-103-v1.zip) (~600MB Uncompressed), unzip it, and drag it into data/text-classification (used to train passage classifier)
+
+install news articles corpus from [Kaggle](https://www.kaggle.com/datasets/sbhatti/news-articles-corpus?resource=download) (~2GB) and place it in data/news-articles (used to train passage classifier)
 
 #### Running Pyserini with clueweb22
 
@@ -35,4 +37,4 @@ install wikitext-103 from [Cloudflare Einstien](https://s3.amazonaws.com/researc
 
 #### Helpful Commands
 
-Format output JSON `cat output/AUG15_BEST.json | python -m json.tool > output/AUG15_BEST_2_F.json`
+Format output JSON `cat output/AUG17_RUN_2.json | python -m json.tool > output/AUG17_RUN_2_F.json`

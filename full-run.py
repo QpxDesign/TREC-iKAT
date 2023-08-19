@@ -37,9 +37,8 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
 
             })
         passage_provenance_objs = []
-        passages = utils.get_passages.getPassagesFromSearchQuery(obj["resolved_utterance"])
+        passages = utils.get_passages.getPassagesFromSearchQuery(obj["resolved_utterance"],100)
         passages = trim_passages(passages)
-        print("GOT PASSAGES")
         combined_passage_summaries = ""
         for passage in passages:
             combined_passage_summaries += f"{summarize_with_fastchat(json.loads(passage.raw)['contents'],prompt)} "
@@ -48,7 +47,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
                 "text":json.loads(passage.raw)["contents"],
                 "score":passage.score
             })
-        final_ans = llama2.answer_question_from_passage(combined_passage_summaries, prompt)
+        final_ans = llama2.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
         print(f"Final Answer: {final_ans}")
         turn_outputs.append({
             "turn_id":f"{topic_obj['number']}_{obj['turn_id']}",
@@ -76,7 +75,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
 if __name__ == '__main__':
     with open('./data/2023_test_topics.json', 'r') as f: 
         data = json.load(f)
-        index = 0
+        index = 3
         output = {
             "run_name":"georgetown_infosense_run",
             "run_type": "automatic",
@@ -85,7 +84,7 @@ if __name__ == '__main__':
         for o in data:
             output['turns'] += run(o)
         #output = run(data[index])
-        filename = f"AUG15_BEST.json"
+        filename = f"AUG17_RUN_2.json"
         with open(f"./output/{filename}", 'a') as f2:
             f2.write(json.dumps(output))
 

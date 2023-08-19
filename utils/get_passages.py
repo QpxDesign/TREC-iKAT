@@ -2,11 +2,13 @@ from pyserini.search.lucene import LuceneSearcher
 from utils.classify_passages import determinePassageReliability
 import json
 
-searcher = LuceneSearcher('data/clueweb/indexes/ikat_collection_2023_02') #indexes/ikat_collection_2023_01
+searcher = LuceneSearcher('data/passage-index') #indexes/ikat_collection_2023_01
 
-def getPassagesFromSearchQuery(query, maxNumberPassages=10):
+def getPassagesFromSearchQuery(query, maxNumberPassages=10, onlyGoodPassages=True):
     hits = searcher.search(q=query,k=maxNumberPassages)
-    return filterOutUnreliablePassages(hits)
+    if onlyGoodPassages:
+        return filterOutUnreliablePassages(hits)
+    return hits
 
 def filterOutUnreliablePassages(passages):
     final = []
@@ -16,8 +18,7 @@ def filterOutUnreliablePassages(passages):
             final.append(passage)
     return final
 
-"""
-a = getPassagesFromSearchQuery("Can i eat fish on a keto diet?",25)
+
+a = getPassagesFromSearchQuery("Sous vide cooking technique",100,True)
 b = json.loads(a[0].raw)["contents"]
 print(b)
-"""

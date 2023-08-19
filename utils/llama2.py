@@ -1,7 +1,7 @@
 from llama_cpp import Llama
 import sys
-llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin", n_ctx=10240, n_threads=16)
-#llm = Llama(model_path="./models/llama-2-70b-chat.ggmlv3.q4_1.bin", n_ctx=10240)
+#llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin", n_ctx=10240, n_threads=16)
+llm = Llama(model_path="./models/llama-2-70b-chat.ggmlv3.q4_1.bin", n_threads=16)
 from utils.rank_passage_sentances import rank
 from utils.prevent_trail_off import prevent_trail_off
 import time
@@ -31,11 +31,14 @@ def gen_summary(passage,question):
     ans = ans.replace('Here is the summary in one sentence based on the information from the passages:','')
     return ans
 
-def answer_question_from_passage(passage,question):
-    prompt = f"Q: Answer this question - {question} - using this information - {remove_extra_spaces(passage)} and your own knowledge. A: "
-    print(remove_extra_spaces(passage))
-    output = llm(prompt,max_tokens=250, stop=["Q:"], echo=True)
-    print(output)
+def answer_question_from_passage(passage,question,previous_chats):
+    prompt = f"Answer this question - {question} - using this information - {remove_extra_spaces(passage)} and your own knowledge."
+    full_prompt = ""
+    for pc in previous_chats:
+        full_prompt += f"Q: {pc['resolved_utterance']} A: {pc['response']}"
+
+    full_prompt += f" Q: {prompt} A: "
+    output = llm(full_prompt,max_tokens=250, stop=["Q:"], echo=True)
     ans = output["choices"][-1]["text"]
     ans = ans.split(" A: ")[-1]
     ans = ans.replace("Sure! Here is a summary of the passage in one sentence:",'')
