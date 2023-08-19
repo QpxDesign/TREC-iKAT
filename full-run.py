@@ -17,7 +17,6 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
     global total_turns
     PTKBs = utils.json_ptkb_dict_to_array.format(topic_obj)
     turn_index = 0
- 
     turn_outputs = []
     for obj in topic_obj["turns"]:
         total_turns += 1
