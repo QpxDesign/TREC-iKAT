@@ -7,3 +7,5 @@ llama-cpp-python
 faiss-cpu
 transformers
 scikit-learn
+openai
+dotenv

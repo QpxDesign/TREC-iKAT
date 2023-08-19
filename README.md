@@ -29,6 +29,8 @@ install wikitext-103 from [Cloudflare Einstien](https://s3.amazonaws.com/researc
 
 install news articles corpus from [Kaggle](https://www.kaggle.com/datasets/sbhatti/news-articles-corpus?resource=download) (~2GB) and place it in data/news-articles (used to train passage classifier)
 
+if you're using ChatGPT instead of Llama, [generate an OPENAI API Key](https://openai.com/blog/openai-api) and set it as an enviromental variable: `export OPENAI_API_KEY='yourkey'`
+
 #### Running Pyserini with clueweb22
 
 1. Place ikat collections (named `ikat_collection_2023_0n.json`) into /data/clueweb/

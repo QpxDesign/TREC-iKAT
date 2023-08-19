@@ -1,11 +1,12 @@
 from llama_cpp import Llama
 import sys
-#llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin", n_ctx=10240, n_threads=16)
-llm = Llama(model_path="./models/llama-2-70b-chat.ggmlv3.q4_1.bin")
+llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin", n_ctx=10240, n_threads=16)
+#llm = Llama(model_path="./models/llama-2-70b-chat.ggmlv3.q4_1.bin") DOESNT WORK YET WITH LLAMA.CPP/ON CURRENT HARDWARE
 from utils.rank_passage_sentances import rank
 from utils.prevent_trail_off import prevent_trail_off
 import time
 import re
+from utils.remove_extra_spaces import remove_extra_spaces
 
 def gen_response(prompt,previous_chats):
     full_prompt = ""
@@ -47,9 +48,3 @@ def answer_question_from_passage(passage,question,previous_chats):
     ans = ans.replace('Sure! Based on the information provided, here is a summary of the passage in one sentence:','')
     ans = ans.replace("\n","")
     return prevent_trail_off(ans)
-
-def remove_extra_spaces(input_string):
-    cleaned_string = re.sub(r'\s+', ' ', input_string)
-    cleaned_string = cleaned_string.replace("\n","")
-    return cleaned_string
-

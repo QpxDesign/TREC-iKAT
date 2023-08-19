@@ -1,4 +1,4 @@
-import utils.llama2 as llama2
+#import utils.llama2 as llama2
 import utils.pktb_similarity as pktb_similarity
 import utils.gen_prompt_from_ptkbs_and_question
 import utils.trim_PTKB
@@ -9,6 +9,7 @@ import json
 import time
 import math
 from utils.fastchat import summarize_with_fastchat
+import utils.chatgpt
 
 start_time = time.time()
 total_turns = 0
@@ -47,7 +48,8 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
                 "text":json.loads(passage.raw)["contents"],
                 "score":passage.score
             })
-        final_ans = llama2.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
+        #final_ans = llama2.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
+        final_ans = utils.chatgpt.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
         print(f"Final Answer: {final_ans}")
         turn_outputs.append({
             "turn_id":f"{topic_obj['number']}_{obj['turn_id']}",
@@ -79,12 +81,13 @@ if __name__ == '__main__':
         output = {
             "run_name":"georgetown_infosense_run",
             "run_type": "automatic",
+            "internal_id":"3 Passages, No Score Threshold, ChatGPT 3.5,.25 PTKB Threshold",
             "turns" : []
         }
         for o in data:
             output['turns'] += run(o)
         #output = run(data[index])
-        filename = f"AUG17_RUN_2.json"
+        filename = f"AUG19_RUN_1.json"
         with open(f"./output/{filename}", 'a') as f2:
             f2.write(json.dumps(output))
 

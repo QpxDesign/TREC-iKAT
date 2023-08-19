@@ -19,6 +19,8 @@ def filterOutUnreliablePassages(passages):
     return final
 
 
+"""
 a = getPassagesFromSearchQuery("Sous vide cooking technique",100,True)
 b = json.loads(a[0].raw)["contents"]
 print(b)
+"""
