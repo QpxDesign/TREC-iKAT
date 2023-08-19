@@ -1,7 +1,7 @@
 from llama_cpp import Llama
 import sys
 #llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin", n_ctx=10240, n_threads=16)
-llm = Llama(model_path="./models/llama-2-70b-chat.ggmlv3.q4_1.bin", n_threads=16)
+llm = Llama(model_path="./models/llama-2-70b-chat.ggmlv3.q4_1.bin")
 from utils.rank_passage_sentances import rank
 from utils.prevent_trail_off import prevent_trail_off
 import time
