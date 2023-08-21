@@ -56,7 +56,7 @@ with open('./data/text-classification/wikitext-103/wiki.train.tokens', 'r') as f
     WIKIPEDIA_PASSAGES = WIKIPEDIA_PASSAGES[:(len(EXPLICIT_UNTRUSTWORTHY_SITES_PASSAGES)+len(ADVERTISEMENT_PASSAGES))]
 
 # GET RELIABLE NEWS ARTICLES
-NEWS_ARTICLES_FOLDER_PATH = './data/news-articles'
+"""NEWS_ARTICLES_FOLDER_PATH = './data/text-classification/news-articles'
 NEWS_ARTICLES = []
 files = os.listdir(NEWS_ARTICLES_FOLDER_PATH)
 for file in files:
@@ -65,7 +65,7 @@ for file in files:
         with open(file_path, 'r') as f:
             NEWS_ARTICLES.append(f.read())
 
-
+"""
 for wp in WIKIPEDIA_PASSAGES:
     features.append(f"This is a reliable passage from Wikipedia: {wp}")
     labels.append("reliable")
@@ -78,9 +78,9 @@ for ap in ADVERTISEMENT_PASSAGES:
     features.append(f"This is a spam or junk passage: {ap}")
     labels.append("junk")
 
-for na in NEWS_ARTICLES:
+"""for na in NEWS_ARTICLES:
     features.append(f"This is a reliable passage from a news source: {na}")
-    labels.append("reliable")
+    labels.append("reliable")"""
 
 X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
 

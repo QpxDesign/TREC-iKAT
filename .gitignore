@@ -6,7 +6,6 @@ llama2/*
 __pycache__/*
 indexes/*
 data/text-classification/*
-data/news-articles/*
 data/passage-index/*
 .env
 

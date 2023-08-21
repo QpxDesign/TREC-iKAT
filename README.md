@@ -40,4 +40,4 @@ please note that a full-run using ChatGPT may use ~$1-3 of credit
 
 #### Helpful Commands
 
-Format output JSON `cat output/AUG17_RUN_2.json | python -m json.tool > output/AUG17_RUN_2_F.json`
+Format large output JSON files with `cat output/AUG17_RUN_2.json | python -m json.tool > output/AUG17_RUN_2_F.json`

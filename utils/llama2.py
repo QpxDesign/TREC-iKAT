@@ -1,7 +1,8 @@
 from llama_cpp import Llama
 import sys
-llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin", n_ctx=10240, n_threads=16)
-#llm = Llama(model_path="./models/llama-2-70b-chat.ggmlv3.q4_1.bin") DOESNT WORK YET WITH LLAMA.CPP/ON CURRENT HARDWARE
+#llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin", n_ctx=10240, n_threads=16)
+llm = Llama(model_path="./models/llama-2-70b-chat.ggmlv3.q4_1.bin", n_gqa=8, n_ctx=10240, n_threads=16) 
+
 from utils.rank_passage_sentances import rank
 from utils.prevent_trail_off import prevent_trail_off
 import time
@@ -33,7 +34,7 @@ def gen_summary(passage,question):
     return ans
 
 def answer_question_from_passage(passage,question,previous_chats):
-    prompt = f"Answer this question - {question} - using this information - {remove_extra_spaces(passage)} and your own knowledge."
+    prompt = f"Answer this question - {question} - using this information - {remove_extra_spaces(passage)}."
     full_prompt = ""
     for pc in previous_chats:
         full_prompt += f"Q: {pc['resolved_utterance']} A: {pc['response']}"
