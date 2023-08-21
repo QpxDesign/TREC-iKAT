@@ -4,8 +4,10 @@ from transformers import (
     AutoModelForSeq2SeqLM,   
     T5Tokenizer,
 )
+
 tokenizer = AutoTokenizer.from_pretrained("lmsys/fastchat-t5-3b-v1.0", legacy=False)
 model = AutoModelForSeq2SeqLM.from_pretrained("lmsys/fastchat-t5-3b-v1.0")
+
 
 def summarize_with_fastchat(passage,question):
     MAX_PASSAGE_LENGTH = 512 #char

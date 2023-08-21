@@ -29,13 +29,14 @@ install wikitext-103 from [Cloudflare Einstien](https://s3.amazonaws.com/researc
 
 install news articles corpus from [Kaggle](https://www.kaggle.com/datasets/sbhatti/news-articles-corpus?resource=download) (~2GB) and place it in data/news-articles (used to train passage classifier)
 
-if you're using ChatGPT instead of Llama, [generate an OPENAI API Key](https://openai.com/blog/openai-api) and set it as an enviromental variable: `export OPENAI_API_KEY='yourkey'`
+if you're using ChatGPT instead of Llama, [generate an OPENAI API Key](https://openai.com/blog/openai-api), create a .env in the main dir, and put your key in it: `OPENAI_API_KEY=<KEY GOES HERE>`
+please note that a full-run using ChatGPT may use ~$1-3 of credit
 
 #### Running Pyserini with clueweb22
 
 1. Place ikat collections (named `ikat_collection_2023_0n.json`) into /data/clueweb/
 2. Format by running `bash scripts/format_ikat_collection.sh` (this will take a long time)
-3. Generate the index: `python -m pyserini.index.lucene --collection JsonCollection  --input ~/TREC-iKAT/data/clueweb --index indexes/ikat_collection_2023  --generator DefaultLuceneDocumentGenerator  --threads 1  --storePositions --storeDocvectors --storeRaw` 
+3. Generate the index: `python -m pyserini.index.lucene --collection JsonCollection  --input ~/TREC-iKAT/data/clueweb --index indexes/ikat_collection_2023  --generator DefaultLuceneDocumentGenerator  --threads 1  --storePositions --storeDocvectors --storeRaw`
 
 #### Helpful Commands
 
