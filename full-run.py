@@ -79,13 +79,13 @@ if __name__ == '__main__':
         output = {
             "run_name":"georgetown_infosense_run",
             "run_type": "automatic",
-            "internal_id":"3 Passages, No Score Threshold, ChatGPT-3.5, .25 PTKB Threshold, Using Kaggle Articles in passage classification",
+            "internal_id":"3 Passages, No Score Threshold, Llama2 70B, .25 PTKB Threshold, Using Kaggle Articles in passage classification",
             "turns" : []
         }
         for o in data:
             output['turns'] += run(o)
         #output = run(data[index])
-        filename = f"AUG21_RUN_1.json"
+        filename = f"AUG21_RUN_2.json"
         with open(f"./output/{filename}", 'a') as f2:
             f2.write(json.dumps(output))
 

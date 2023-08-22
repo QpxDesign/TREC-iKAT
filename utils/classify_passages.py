@@ -92,7 +92,7 @@ model = LogisticRegression()
 model.fit(X_train_tfidf, y_train)
 
 predictions = model.predict(X_test_tfidf)
-print("INITIALIZED TFID Vectorizer")
+print("INITIALIZED TF-IDF MODEL")
 
 def determinePassageReliability(passage):
     START_TIME = time.time()

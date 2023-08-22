@@ -8,3 +8,7 @@ faiss-cpu
 transformers
 scikit-learn
 openai
+flask
+bitsandbytes
+accelerate
+fschat[model_worker,webui]
