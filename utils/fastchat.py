@@ -9,7 +9,7 @@ import time
 
 USE_GPU = False # SET THIS (NEED A LOT OF VRAM IF USING LLAMA WITH GPU AND FASTCHAT WITH GPU)
 
-device = 'cuda' if torch.cuda.is_available() or USE_GPU else 'cpu'
+device = 'cuda' if torch.cuda.is_available() and USE_GPU else 'cpu'
 
 
 tokenizer = AutoTokenizer.from_pretrained("lmsys/fastchat-t5-3b-v1.0", legacy=False)

@@ -39,7 +39,7 @@ This was tested/developed/ran from a computer running Ubuntu 22.04 with an RTX 3
 - change references to `"device=cuda"` in `utils/ptkb_similarity.py` and `utils/rank_passage_sentences.py`
 - switch which model of LLaMa you're running depending on your system's capabilities:
   - Use quantized versions of LLaMa2, and, if you want to run on GPU or you have limited RAM, make sure you have more ram than the listed RAM usage (if you have too little VRAM to run a model but enough ram, uninstall llama-cpp-python and reinstall without GPU support: `pip install llama-cpp-python --force-reinstall --upgrade --no-cache-dir`)
-    - [quantized llama2 13B chat](https://huggingface.co/TheBloke/Llama-2-7B-chat-GGML)
+    - [quantized llama2 7B chat](https://huggingface.co/TheBloke/Llama-2-7B-chat-GGML)
     - [quantized llama2 13B chat](https://huggingface.co/TheBloke/Llama-2-13B-chat-GGML)
     - [quantized llama2 70B chat](https://huggingface.co/TheBloke/Llama-2-70B-chat-GGML)
 
