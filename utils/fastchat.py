@@ -13,7 +13,7 @@ device = 'cuda' if torch.cuda.is_available() and USE_GPU else 'cpu'
 
 
 tokenizer = AutoTokenizer.from_pretrained("lmsys/fastchat-t5-3b-v1.0", legacy=False)
-model = AutoModelForSeq2SeqLM.from_pretrained("lmsys/fastchat-t5-3b-v1.0",load_in_8bit=True) #ONLY HAVE load_in_8bit True if using GPU with limited VRAM
+model = AutoModelForSeq2SeqLM.from_pretrained("lmsys/fastchat-t5-3b-v1.0") #ONLY HAVE load_in_8bit True if using GPU with limited VRAM
 
 
 def summarize_with_fastchat(passage,question):

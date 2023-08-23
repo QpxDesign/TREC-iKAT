@@ -26,7 +26,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
         
         prompt = utils.gen_prompt_from_ptkbs_and_question.gen(ranked_ptkbs,obj["resolved_utterance"])
         print("prompt: " + prompt)
-        #b = llama2.gen_response(prompt,topic_obj["turns"][0:turn_index])
+        preliminary_response = llama2.gen_response(prompt,topic_obj["turns"][0:turn_index])
         ptkb_provenance_objs = []
         
         for ptkb in ranked_ptkbs:
@@ -37,9 +37,10 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
 
             })
         passage_provenance_objs = []
-        passages = utils.get_passages.getPassagesFromSearchQuery(obj["resolved_utterance"],100)
-        passages = trim_passages(passages)
+        passages = utils.get_passages.getPassagesFromSearchQuery(preliminary_response,100)
+        passages = trim_passages(passages, preliminary_response)
         combined_passage_summaries = ""
+        print(passages)
         for passage in passages:
             combined_passage_summaries += f"{summarize_with_fastchat(json.loads(passage.raw)['contents'],prompt)} "
             passage_provenance_objs.append({
@@ -49,6 +50,22 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
             })
         final_ans = llama2.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
         #final_ans = utils.chatgpt.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
+        """
+        # CYCLE
+        new_passage_provenance_objs = []
+        new_passages = utils.get_passages.getPassagesFromSearchQuery(llama_response,100)
+        new_passages = trim_passages(new_passages)
+        new_combined_passage_summaries = ""
+        for passage in new_passages:
+            new_combined_passage_summaries += f"{summarize_with_fastchat(json.loads(passage.raw)['contents'],prompt)} "
+            new_passage_provenance_objs.append({
+                "id":passage.docid,
+                "text":json.loads(passage.raw)["contents"],
+                "score":passage.score
+            })
+
+        final_ans = llama2.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
+        """
         print(f"Final Answer: {final_ans}")
         turn_outputs.append({
             "turn_id":f"{topic_obj['number']}_{obj['turn_id']}",
@@ -79,13 +96,13 @@ if __name__ == '__main__':
         output = {
             "run_name":"georgetown_infosense_run",
             "run_type": "automatic",
-            "internal_id":"3 Passages, No Score Threshold, Llama2 70B, .25 PTKB Threshold, Using Kaggle Articles in passage classification",
+            "internal_id":"3 Passages, No Score Threshold, Llama2 13B GPU CAPABLE, .25 PTKB Threshold, NOT Using Kaggle Articles in passage classification, One Shot Approach w/ChatGPT Relevance Verification",
             "turns" : []
         }
-        for o in data:
-            output['turns'] += run(o)
-        #output = run(data[index])
-        filename = f"AUG21_RUN_2.json"
+        #for o in data:
+            #output['turns'] += run(o)
+        output = run(data[index])
+        filename = f"AUG23_RUN_1.json"
         with open(f"./output/{filename}", 'a') as f2:
             f2.write(json.dumps(output))
 
