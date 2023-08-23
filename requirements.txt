@@ -12,3 +12,4 @@ flask
 bitsandbytes
 accelerate
 fschat[model_worker,webui]
+yake

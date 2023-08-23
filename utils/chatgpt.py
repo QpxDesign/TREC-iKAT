@@ -36,7 +36,7 @@ def determine_passage_relevance(passage, statement):
     response = []
     while not RECEIVED_RESPONSE:
         try:
-            prompt = f"Is this passage - {json.loads(passage.raw)['contents']} relevant to this response - {statement}? Answer with either 'yes' or 'no'."
+            prompt = f"Is this passage - {json.loads(passage.raw)['contents']} relevant to any part of this response - {statement}? Answer with either 'yes' or 'no'."
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[

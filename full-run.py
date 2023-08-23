@@ -10,6 +10,7 @@ import time
 import math
 from utils.fastchat import summarize_with_fastchat
 import utils.chatgpt
+from utils.extract_keywords import extract_keywords
 
 start_time = time.time()
 total_turns = 0
@@ -36,11 +37,19 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
                 "score":ptkb[1]
 
             })
+    
         passage_provenance_objs = []
         passages = utils.get_passages.getPassagesFromSearchQuery(preliminary_response,100)
         passages = trim_passages(passages, preliminary_response)
         combined_passage_summaries = ""
-        print(passages)
+ 
+        if len(passages) == 0: # BODGE
+            keywords = extract_keywords(text=preliminary_response)
+            for keyword in keywords:
+                a = utils.get_passages.getPassagesFromSearchQuery(keyword, 15,True,True)
+                a = trim_passages(a,preliminary_response)
+                passages.append(a)
+
         for passage in passages:
             combined_passage_summaries += f"{summarize_with_fastchat(json.loads(passage.raw)['contents'],prompt)} "
             passage_provenance_objs.append({
@@ -96,13 +105,13 @@ if __name__ == '__main__':
         output = {
             "run_name":"georgetown_infosense_run",
             "run_type": "automatic",
-            "internal_id":"3 Passages, No Score Threshold, Llama2 13B GPU CAPABLE, .25 PTKB Threshold, NOT Using Kaggle Articles in passage classification, One Shot Approach w/ChatGPT Relevance Verification",
+            "internal_id":"3 Passages, No Score Threshold, Llama2 13B GPU CAPABLE, .25 PTKB Threshold, NOT Using Kaggle Articles in passage classification, One Shot Approach w/ChatGPT Relevance Verification, YAKE Keyword Extraction Fallback",
             "turns" : []
         }
         #for o in data:
             #output['turns'] += run(o)
         output = run(data[index])
-        filename = f"AUG23_RUN_1.json"
+        filename = f"AUG23_RUN_2.json"
         with open(f"./output/{filename}", 'a') as f2:
             f2.write(json.dumps(output))
 
