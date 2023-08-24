@@ -26,8 +26,8 @@ def filterOutUnreliablePassages(passages):
             final.append(passage)
     return final
 
-#"""
+"""
 a = getPassagesFromSearchQuery("Black Garlic paste",100,True,True)
 b = json.loads(a[0].raw)["contents"]
 print(b)
-#"""
+"""

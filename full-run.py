@@ -9,7 +9,7 @@ import json
 import time
 import math
 from utils.fastchat import summarize_with_fastchat
-import utils.chatgpt
+import utils.chatgpt as chatgpt
 from utils.extract_keywords import extract_keywords
 
 start_time = time.time()
@@ -32,57 +32,45 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
         
         for ptkb in ranked_ptkbs:
             ptkb_provenance_objs.append({
-                "id": PTKBs.index(ptkb[0]),
+                "id": str(PTKBs.index(ptkb[0])),
                 "text":ptkb[0],
                 "score":ptkb[1]
 
             })
-    
+
         passage_provenance_objs = []
-        passages = utils.get_passages.getPassagesFromSearchQuery(preliminary_response,100)
-        passages = trim_passages(passages, preliminary_response)
         combined_passage_summaries = ""
- 
+        passages = utils.get_passages.getPassagesFromSearchQuery(preliminary_response,100)
+        passages = trim_passages(passages, preliminary_response, obj["resolved_utterance"])
+        combined_passage_summaries = ""
         if len(passages) == 0: # BODGE
             keywords = extract_keywords(text=preliminary_response)
             for keyword in keywords:
-                a = utils.get_passages.getPassagesFromSearchQuery(keyword, 15,True,True)
-                a = trim_passages(a,preliminary_response)
-                passages.append(a)
+                a = utils.get_passages.getPassagesFromSearchQuery(keyword[0], 15,True,True)
+                a = trim_passages(a,preliminary_response, obj["resolved_utterance"])
+                passages += a
 
         for passage in passages:
-            combined_passage_summaries += f"{summarize_with_fastchat(json.loads(passage.raw)['contents'],prompt)} "
+            summary = summarize_with_fastchat(json.loads(passage.raw)['contents'],prompt)
+            combined_passage_summaries += summary
             passage_provenance_objs.append({
                 "id":passage.docid,
                 "text":json.loads(passage.raw)["contents"],
-                "score":passage.score
+                "score":passage.score,
+                "used":True
             })
         final_ans = llama2.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
-        #final_ans = utils.chatgpt.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
-        """
-        # CYCLE
-        new_passage_provenance_objs = []
-        new_passages = utils.get_passages.getPassagesFromSearchQuery(llama_response,100)
-        new_passages = trim_passages(new_passages)
-        new_combined_passage_summaries = ""
-        for passage in new_passages:
-            new_combined_passage_summaries += f"{summarize_with_fastchat(json.loads(passage.raw)['contents'],prompt)} "
-            new_passage_provenance_objs.append({
-                "id":passage.docid,
-                "text":json.loads(passage.raw)["contents"],
-                "score":passage.score
-            })
-
-        final_ans = llama2.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
-        """
+        #final_ans = chatgpt.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
         print(f"Final Answer: {final_ans}")
         turn_outputs.append({
             "turn_id":f"{topic_obj['number']}_{obj['turn_id']}",
             "responses": [
                 {
                     "rank":1,
+                    "user_utterance": obj["resolved_utterance"],
                     "generated_prompt": prompt,
                     "text":final_ans,
+                    "preliminary_response": preliminary_response,
                     "combined_passage_summaries":combined_passage_summaries,
                     "ptkb_provenance":ptkb_provenance_objs,
                     "passage_provenance":passage_provenance_objs
@@ -101,17 +89,17 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
 if __name__ == '__main__':
     with open('./data/2023_test_topics.json', 'r') as f: 
         data = json.load(f)
-        index = 3
+        index = -1
         output = {
             "run_name":"georgetown_infosense_run",
             "run_type": "automatic",
-            "internal_id":"3 Passages, No Score Threshold, Llama2 13B GPU CAPABLE, .25 PTKB Threshold, NOT Using Kaggle Articles in passage classification, One Shot Approach w/ChatGPT Relevance Verification, YAKE Keyword Extraction Fallback",
+            "internal_id":"3 Passages, No Score Threshold, Llama2 13B GPU CAPABLE, .25 PTKB Threshold, NOT Using Kaggle Articles in passage classification, One Shot Approach w/ChatGPT Relevance Verification, YAKE Keyword Extraction Fallback, Checks for question type and for passage user utterance relevance",
             "turns" : []
         }
         #for o in data:
             #output['turns'] += run(o)
         output = run(data[index])
-        filename = f"AUG23_RUN_2.json"
+        filename = f"AUG24_RUN_1.json"
         with open(f"./output/{filename}", 'a') as f2:
             f2.write(json.dumps(output))
 

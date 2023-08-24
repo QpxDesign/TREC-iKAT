@@ -52,3 +52,9 @@ This was tested/developed/ran from a computer running Ubuntu 22.04 with an RTX 3
 #### Helpful Commands
 
 Format large output JSON files with `cat output/AUG17_RUN_2.json | python -m json.tool > output/AUG17_RUN_2_F.json`
+
+### Planned Compliance with IKAT Organizers
+
+- For Passage Provence, we need top 1000 passages as well as the passages we used (marked with in JSON with `"Used":True`)
+  - We can [download](https://github.com/irlabamsterdam/iKAT/tree/main/top_1k_results) the top 1000 results from their GitHub
+- We can also use their [Run validation script](https://github.com/irlabamsterdam/iKAT/tree/main/2023/scripts/run_validation)

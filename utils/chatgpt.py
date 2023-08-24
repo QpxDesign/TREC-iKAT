@@ -31,12 +31,12 @@ def answer_question_from_passage(passage,question,previous_chats):
             print("FAILED TO CONNECT TO OPENAI SERVERS - RETRYING")
     return prevent_trail_off(response['choices'][0]['message']['content'])
 
-def determine_passage_relevance(passage, statement):
+def determine_passage_relevance(passage, statement, userUtterance) -> bool:
     RECEIVED_RESPONSE = False
     response = []
     while not RECEIVED_RESPONSE:
         try:
-            prompt = f"Is this passage - {json.loads(passage.raw)['contents']} relevant to any part of this response - {statement}? Answer with either 'yes' or 'no'."
+            prompt = f"Is this passage - {json.loads(passage.raw)['contents']} relevant to this response - {statement} - AND this question {userUtterance}? Answer with either 'yes' or 'no'."
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
@@ -44,6 +44,7 @@ def determine_passage_relevance(passage, statement):
                 ],
                 max_tokens=10
             )
+            print(response)
             RECEIVED_RESPONSE = True
         except:
             print("FAILED TO CONNECT TO OPENAI SERVERS - RETRYING")
@@ -53,6 +54,54 @@ def determine_passage_relevance(passage, statement):
     if ans[0:3].lower() == 'yes':
         return True
     return False
+
+def tripleCheck(passage_summary, question):
+    RECEIVED_RESPONSE = False
+    response = []
+    while not RECEIVED_RESPONSE:
+        try:
+            prompt = f"Is this passage - {passage_summary} relevant to this question - {question}? Answer with either 'yes' or 'no'."
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {'role':'user','content':prompt}
+                ],
+                max_tokens=5
+            )
+            print(response)
+            RECEIVED_RESPONSE = True
+        except:
+            print("FAILED TO CONNECT TO OPENAI SERVERS - RETRYING")
+    ans = remove_extra_spaces(response['choices'][0]['message']['content'])
+    if ans[0:2].lower() == "no":
+        return False
+    if ans[0:3].lower() == 'yes':
+        return True
+    return False
+
+def checkQuestionType(question) -> bool:
+    RECEIVED_RESPONSE = False
+    response = []
+    while not RECEIVED_RESPONSE:
+        try:
+            prompt = f"could this question - {question} be supported by? Answer with either 'yes' or 'no'."
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {'role':'user','content':prompt}
+                ],
+                max_tokens=10
+            )
+            print(response)
+            RECEIVED_RESPONSE = True
+        except:
+            print("FAILED TO CONNECT TO OPENAI SERVERS - RETRYING")
+    ans = remove_extra_spaces(response['choices'][0]['message']['content'])
+    if ans[0:2].lower() == "no":
+        return False
+    if ans[0:3].lower() == 'yes':
+        return True
+    return True
 """
 a = openai.ChatCompletion.create(
   model="gpt-3.5-turbo",
