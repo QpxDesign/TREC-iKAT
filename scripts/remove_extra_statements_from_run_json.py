@@ -24,5 +24,5 @@ if __name__ == '__main__':
                 ]
             }
             correct_output['turns'].append(correct_turn) 
-        with open(f"./output/{sys.argv[1]}_CF.json", 'a') as f2:
+        with open(f"./output/{sys.argv[1].split('.')[0]}_CF.json", 'a') as f2:
             f2.write(json.dumps(correct_output))

@@ -1,7 +1,23 @@
-#import utils.llama2 as llama2
+# import utils.llama2 as llama2
 import utils.chatgpt as chatgpt
+from utils.classify_passages import determinePassageReliability
+import json
 
-def trim_passages(passages,response, userUtterance):
+
+def filterOutUnreliablePassages(passages):
+    final = []
+    for passage in passages:
+        predicted_label = determinePassageReliability(
+            json.loads(passage.raw)["contents"])
+        if predicted_label == 'reliable':
+            final.append(passage)
+    return final
+
+
+def trim_passages(passages, response, userUtterance):
+    a = filterOutUnreliablePassages(passages)
+    return a[:3]
+    """
     refined_passages = []
     for passage in passages:
         if len(refined_passages) == 3:
@@ -10,9 +26,4 @@ def trim_passages(passages,response, userUtterance):
             print(passage)
             refined_passages.append(passage)
     return refined_passages[:3]
-    """cutoffValue = 10 # TO-DO: FIND GOOD CUT OFF VALUE
-    for i in range(len(passages)):
-        if passages[i].score < cutoffValue:
-            return passages[0:i]
-    return passages
-"""
+    """
