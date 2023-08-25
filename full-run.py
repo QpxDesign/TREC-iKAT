@@ -1,7 +1,6 @@
 import utils.llama2 as llama2
-import utils.pktb_similarity as pktb_similarity
+import utils.ptkb_similarity as ptkb_similarity
 import utils.gen_prompt_from_ptkbs_and_question
-import utils.trim_PTKB
 from utils.trim_passages import trim_passages
 import utils.json_ptkb_dict_to_array
 import utils.get_passages
@@ -22,10 +21,10 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
     for obj in topic_obj["turns"]:
         total_turns += 1
 
-        a = pktb_similarity.rankPTKBS(PTKBs,obj["resolved_utterance"])
-        ranked_ptkbs = utils.trim_PTKB.trim(a)
+        ranked_ptkbs = ptkb_similarity.rankPTKBS(PTKBs,obj["utterance"]) 
+        ranked_ptkbs = list(filter(lambda a : a[1] > .25, ranked_ptkbs))
         
-        prompt = utils.gen_prompt_from_ptkbs_and_question.gen(ranked_ptkbs,obj["resolved_utterance"])
+        prompt = utils.gen_prompt_from_ptkbs_and_question.gen(ranked_ptkbs,obj["utterance"])
         print("prompt: " + prompt)
         preliminary_response = llama2.gen_response(prompt,topic_obj["turns"][0:turn_index])
         ptkb_provenance_objs = []
@@ -41,23 +40,30 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
         passage_provenance_objs = []
         combined_passage_summaries = ""
         passages = utils.get_passages.getPassagesFromSearchQuery(preliminary_response,100)
-        passages = trim_passages(passages, preliminary_response, obj["resolved_utterance"])
+        used_passages = trim_passages(passages, preliminary_response, obj["utterance"]) # NEED TO CHANGE TO USE utterance and not user_utterance so it can be considered 'automatic' run# NEED TO CHANGE TO USE utterance and not user_utterance so it can be considered 'automatic' run
         combined_passage_summaries = ""
         if len(passages) == 0: # BODGE
             keywords = extract_keywords(text=preliminary_response)
             for keyword in keywords:
-                a = utils.get_passages.getPassagesFromSearchQuery(keyword[0], 15,True,True)
-                a = trim_passages(a,preliminary_response, obj["resolved_utterance"])
-                passages += a
+                keyword_passages = utils.get_passages.getPassagesFromSearchQuery(keyword[0], 15,True,True)
+                passages += keyword_passages
+                trimmed_keyword_passages = trim_passages(a,preliminary_response, obj["resolved_utterance"]) # NEED TO CHANGE TO USE utterance and not user_utterance so it can be considered 'automatic' run
+                used_passages += trimmed_keyword_passages
 
         for passage in passages:
-            summary = summarize_with_fastchat(json.loads(passage.raw)['contents'],prompt)
-            combined_passage_summaries += summary
-            passage_provenance_objs.append({
+            passageWasUsed = False
+            for used_passage in used_passages:
+                if used_passage.docid == passage.docid:
+                    passageWasUsed = True
+                    summary = summarize_with_fastchat(json.loads(passage.raw)['contents'],prompt)
+                    combined_passage_summaries += summary
+                    break
+                
+            passage_provenance_objs.append({ # NEED TO CHANGE TO ADD ALL PASSAGES CONSIDERED as well as ones marked 'used'
                 "id":passage.docid,
                 "text":json.loads(passage.raw)["contents"],
                 "score":passage.score,
-                "used":True
+                "used":passageWasUsed
             })
         final_ans = llama2.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
         #final_ans = chatgpt.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
@@ -67,7 +73,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
             "responses": [
                 {
                     "rank":1,
-                    "user_utterance": obj["resolved_utterance"],
+                    "user_utterance": obj["utterance"],
                     "generated_prompt": prompt,
                     "text":final_ans,
                     "preliminary_response": preliminary_response,
@@ -89,7 +95,7 @@ def run(topic_obj): # outputs JSON that fufils all requirements (ranked PTKBs fr
 if __name__ == '__main__':
     with open('./data/2023_test_topics.json', 'r') as f: 
         data = json.load(f)
-        index = -1
+        index = 0
         output = {
             "run_name":"georgetown_infosense_run",
             "run_type": "automatic",
@@ -97,9 +103,10 @@ if __name__ == '__main__':
             "turns" : []
         }
         #for o in data:
-            #output['turns'] += run(o)
-        output = run(data[index])
-        filename = f"AUG24_RUN_1.json"
+            #output['turns'].append(run(o)) 
+        #output = run(data[index])
+        output['turns'] += run(data[index])
+        filename = f"AUG24_RUN_4.json"
         with open(f"./output/{filename}", 'a') as f2:
             f2.write(json.dumps(output))
 

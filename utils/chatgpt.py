@@ -44,7 +44,6 @@ def determine_passage_relevance(passage, statement, userUtterance) -> bool:
                 ],
                 max_tokens=10
             )
-            print(response)
             RECEIVED_RESPONSE = True
         except:
             print("FAILED TO CONNECT TO OPENAI SERVERS - RETRYING")
@@ -68,7 +67,6 @@ def tripleCheck(passage_summary, question):
                 ],
                 max_tokens=5
             )
-            print(response)
             RECEIVED_RESPONSE = True
         except:
             print("FAILED TO CONNECT TO OPENAI SERVERS - RETRYING")
@@ -92,7 +90,6 @@ def checkQuestionType(question) -> bool:
                 ],
                 max_tokens=10
             )
-            print(response)
             RECEIVED_RESPONSE = True
         except:
             print("FAILED TO CONNECT TO OPENAI SERVERS - RETRYING")
