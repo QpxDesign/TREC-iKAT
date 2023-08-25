@@ -21,7 +21,6 @@ def transformerSim(statements, question):
 
 def rankPTKBS(PTKBs, Text):
     # print(f"Sample Response: {turn['response']}")
-    print(PTKBs)
     text_keywords = extract_keywords(Text)
     if len(text_keywords) == 0:
         return []
