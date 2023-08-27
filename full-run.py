@@ -11,6 +11,7 @@ from utils.fastchat import summarize_with_fastchat
 import utils.chatgpt as chatgpt
 from utils.extract_keywords import extract_keywords
 from utils.sort_passage_provenances import sort_passage_provenances
+from utils.determine_output_name import determine_output_name
 
 start_time = time.time()
 total_turns = 0
@@ -134,6 +135,6 @@ if __name__ == '__main__':
         # output['turns'].append(run(o))
         # output = run(data[index])
         output['turns'] += run(data[index])
-        filename = f"AUG25_RUN_6.json"
+        filename = determine_output_name()
         with open(f"./output/{filename}", 'a') as f2:
             f2.write(json.dumps(output))
