@@ -17,6 +17,7 @@ total_turns = 0
 
 AUTOMATIC_RUN = True
 
+
 def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs from )
     global total_turns
     global AUTOMATIC_RUN
@@ -29,7 +30,7 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
         ranked_ptkbs = ptkb_similarity.rankPTKBS(PTKBs, obj["utterance"])
         ranked_ptkbs = list(filter(lambda a: a[1] > .25, ranked_ptkbs))
         if not AUTOMATIC_RUN:
-            used_ptkbs = obj[ptkb_provenance]
+            used_ptkbs = obj["ptkb_provenance"]
             ranked_ptkbs = []
             for up in used_ptkbs:
                 a = (PTKBs[up-1], -1)
@@ -68,7 +69,7 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
                         keyword[0], 15, True)
                     passages += keyword_passages
                     trimmed_keyword_passages = trim_passages(
-                        keyword_passages, answer, obj["utterance"]) 
+                        keyword_passages, answer, obj["utterance"])
                     used_passages += trimmed_keyword_passages
 
             print(f"LEN OF USED PASSAGES: {len(used_passages)}")

@@ -1,5 +1,5 @@
 from sentence_transformers import SentenceTransformer, util
-from utils.extract_keywords import extract_keywords
+# from utils.extract_keywords import extract_keywords
 
 st_model = SentenceTransformer('paraphrase-MiniLM-L6-v2', device='cuda')
 
@@ -21,16 +21,22 @@ def transformerSim(statements, question):
 
 def rankPTKBS(PTKBs, Text):
     # print(f"Sample Response: {turn['response']}")
-    text_keywords = extract_keywords(Text)
-    if len(text_keywords) == 0:
-        return []
-    keyword = extract_keywords(Text)[0][0]
-    # Rank PTKBs from response (reverse-order)
-    a = transformerSim(PTKBs, keyword)
+    a = transformerSim(PTKBs, Text)
     return a
 
 
 """
-a = rankPTKBS(["I'm lactose intolerant.", "I'm vegetarian", "I'm allergic to soybeans","Because of my kidney problem, I have to drink water frequently to stay hydrated.", "I have an expensive car."], "Can you held me find a diet?")
+a = rankPTKBS([
+    "I don't like the new spin-off; because I keep comparing the two and it has lower quality.",
+    "Because of my kidney problem, I have to drink water frequently to stay hydrated.",
+    "I'm going to change my phone.",
+    "I can't exercise too much because of the heart problem that I have.",
+    "I'm vegetarian.",
+    "I'm lactose intolerant.",
+    "I'm allergic to soybeans.",
+    "I just finished watching the Game of Thrones.",
+    "I didn't like how the series ended, especially the war scenes.",
+    "I'm an Android user."
+], "I prefer a natural diet, not a pill-based diet. Which of the aforementioned ones is natural?")
 print(a)
 """
