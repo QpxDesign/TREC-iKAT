@@ -14,20 +14,29 @@ from utils.extract_keywords import extract_keywords
 start_time = time.time()
 total_turns = 0
 
+AUTOMATIC_RUN = True
 
 def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs from )
     global total_turns
+    global AUTOMATIC_RUN
     PTKBs = utils.json_ptkb_dict_to_array.format(topic_obj)
     turn_index = 0
     turn_outputs = []
     for obj in topic_obj["turns"]:
+        N_SHOTS = 2
         total_turns += 1
-
         ranked_ptkbs = ptkb_similarity.rankPTKBS(PTKBs, obj["utterance"])
         ranked_ptkbs = list(filter(lambda a: a[1] > .25, ranked_ptkbs))
+        if not AUTOMATIC_RUN:
+            used_ptkbs = obj[ptkb_provenance]
+            ranked_ptkbs = []
+            for up in used_ptkbs:
+                a = (PTKBs[up-1], -1)
+                ranked_ptkbs.append(a)
 
         prompt = utils.gen_prompt_from_ptkbs_and_question.gen(
-            ranked_ptkbs, obj["utterance"])
+            ranked_ptkbs, obj["utterance"]) if AUTOMATIC_RUN else utils.gen_prompt_from_ptkbs_and_question.gen(
+            ranked_ptkbs, obj["resolved_utterance"])
         print("prompt: " + prompt)
         preliminary_response = llama2.gen_response(
             prompt, topic_obj["turns"][0:turn_index])
@@ -40,48 +49,51 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
                 "score": ptkb[1]
 
             })
-
+        answer = preliminary_response
         passage_provenance_objs = []
-        combined_passage_summaries = ""
-        passages = utils.get_passages.getPassagesFromSearchQuery(
-            preliminary_response, 100)
-        # NEED TO CHANGE TO USE utterance and not user_utterance so it can be considered 'automatic' run# NEED TO CHANGE TO USE utterance and not user_utterance so it can be considered 'automatic' run
-        used_passages = trim_passages(
-            passages, preliminary_response, obj["utterance"])
-        combined_passage_summaries = ""
-        if len(passages) == 0:  # BODGE
-            keywords = extract_keywords(text=preliminary_response)
-            for keyword in keywords:
-                keyword_passages = utils.get_passages.getPassagesFromSearchQuery(
-                    keyword[0], 15, True)
-                passages += keyword_passages
-                # NEED TO CHANGE TO USE utterance and not user_utterance so it can be considered 'automatic' run
-                trimmed_keyword_passages = trim_passages(
-                    keyword_passages, preliminary_response, obj["utterance"])
-                used_passages += trimmed_keyword_passages
+        while N_SHOTS > 0:
+            combined_passage_summaries = ""
+            passages = utils.get_passages.getPassagesFromSearchQuery(
+                answer, 100)
+            # NEED TO CHANGE TO USE utterance and not user_utterance so it can be considered 'automatic' run# NEED TO CHANGE TO USE utterance and not user_utterance so it can be considered 'automatic' run
+            used_passages = trim_passages(
+                passages, answer, obj["utterance"]) if AUTOMATIC_RUN else trim_passages(
+                passages, answer, obj["resolved_utterance"])
+            combined_passage_summaries = ""
+            if len(passages) == 0:  # BODGE
+                keywords = extract_keywords(text=answer)
+                for keyword in keywords:
+                    keyword_passages = utils.get_passages.getPassagesFromSearchQuery(
+                        keyword[0], 15, True)
+                    passages += keyword_passages
+                    trimmed_keyword_passages = trim_passages(
+                        keyword_passages, answer, obj["utterance"]) 
+                    used_passages += trimmed_keyword_passages
 
-        print(f"LEN OF USED PASSAGES: {len(used_passages)}")
+            print(f"LEN OF USED PASSAGES: {len(used_passages)}")
 
-        for passage in passages:
-            passageWasUsed = False
-            for used_passage in used_passages:
-                if used_passage.docid == passage.docid:
-                    passageWasUsed = True
-                    summary = summarize_with_fastchat(
-                        json.loads(passage.raw)['contents'], prompt)
-                    combined_passage_summaries += summary
-                    break
+            for passage in passages:
+                passageWasUsed = False
+                for used_passage in used_passages:
+                    if used_passage.docid == passage.docid:
+                        passageWasUsed = True
+                        summary = summarize_with_fastchat(
+                            json.loads(passage.raw)['contents'], prompt)
+                        combined_passage_summaries += summary
+                        break
+                if N_SHOTS == 1:
+                    passage_provenance_objs.append({  # NEED TO CHANGE TO ADD ALL PASSAGES CONSIDERED as well as ones marked 'used'
+                        "id": passage.docid,
+                        "text": json.loads(passage.raw)["contents"],
+                        "score": passage.score,
+                        "used": passageWasUsed
+                    })
+            answer = llama2.answer_question_from_passage(
+                combined_passage_summaries, prompt, topic_obj["turns"][0:turn_index])
+            N_SHOTS = N_SHOTS - 1
 
-            passage_provenance_objs.append({  # NEED TO CHANGE TO ADD ALL PASSAGES CONSIDERED as well as ones marked 'used'
-                "id": passage.docid,
-                "text": json.loads(passage.raw)["contents"],
-                "score": passage.score,
-                "used": passageWasUsed
-            })
-        final_ans = llama2.answer_question_from_passage(
-            combined_passage_summaries, prompt, topic_obj["turns"][0:turn_index])
         # final_ans = chatgpt.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
-        print(f"Final Answer: {final_ans}")
+        print(f"Final Answer: {answer}")
         turn_outputs.append({
             "turn_id": f"{topic_obj['number']}_{obj['turn_id']}",
             "responses": [
@@ -89,7 +101,7 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
                     "rank": 1,
                     "user_utterance": obj["utterance"],
                     "generated_prompt": prompt,
-                    "text":final_ans,
+                    "text":answer,
                     "preliminary_response": preliminary_response,
                     "combined_passage_summaries":combined_passage_summaries,
                     "ptkb_provenance":ptkb_provenance_objs,
@@ -120,6 +132,6 @@ if __name__ == '__main__':
         # output['turns'].append(run(o))
         # output = run(data[index])
         output['turns'] += run(data[index])
-        filename = f"AUG25_RUN_5.json"
+        filename = f"AUG25_RUN_6.json"
         with open(f"./output/{filename}", 'a') as f2:
             f2.write(json.dumps(output))
