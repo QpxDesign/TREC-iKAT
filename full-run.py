@@ -10,6 +10,7 @@ import math
 from utils.fastchat import summarize_with_fastchat
 import utils.chatgpt as chatgpt
 from utils.extract_keywords import extract_keywords
+from utils.sort_passage_provenances import sort_passage_provenances
 
 start_time = time.time()
 total_turns = 0
@@ -105,7 +106,7 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
                     "preliminary_response": preliminary_response,
                     "combined_passage_summaries":combined_passage_summaries,
                     "ptkb_provenance":ptkb_provenance_objs,
-                    "passage_provenance":passage_provenance_objs
+                    "passage_provenance":sort_passage_provenances(passage_provenance_objs)
                 }
 
             ]
