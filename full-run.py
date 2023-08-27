@@ -58,11 +58,9 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
             combined_passage_summaries = ""
             passages = utils.get_passages.getPassagesFromSearchQuery(
                 answer, 100)
-            # NEED TO CHANGE TO USE utterance and not user_utterance so it can be considered 'automatic' run# NEED TO CHANGE TO USE utterance and not user_utterance so it can be considered 'automatic' run
             used_passages = trim_passages(
                 passages, answer, obj["utterance"]) if AUTOMATIC_RUN else trim_passages(
                 passages, answer, obj["resolved_utterance"])
-            combined_passage_summaries = ""
             if len(passages) == 0:  # BODGE
                 keywords = extract_keywords(text=answer)
                 for keyword in keywords:
@@ -85,7 +83,7 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
                         combined_passage_summaries += summary
                         break
                 if N_SHOTS == 1:
-                    passage_provenance_objs.append({  # NEED TO CHANGE TO ADD ALL PASSAGES CONSIDERED as well as ones marked 'used'
+                    passage_provenance_objs.append({
                         "id": passage.docid,
                         "text": json.loads(passage.raw)["contents"],
                         "score": passage.score,
@@ -128,7 +126,7 @@ if __name__ == '__main__':
         output = {
             "run_name": "georgetown_infosense_run",
             "run_type": "automatic",
-            "internal_id": "3 Passages, No Score Threshold, Llama2 13B GPU CAPABLE, .25 PTKB Threshold, NOT Using Kaggle Articles in passage classification, One Shot Approach without ChatGPT Relevance Verification, YAKE Keyword Extraction Fallback",
+            "internal_id": "3 Passages, No Score Threshold, Llama2 13B GPU CAPABLE, Two Shot Approach without ChatGPT Relevance Verification, Enhanced PTKB Sim Checker ",
             "turns": []
         }
         # for o in data:

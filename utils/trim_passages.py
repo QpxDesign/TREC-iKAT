@@ -15,15 +15,13 @@ def filterOutUnreliablePassages(passages):
 
 
 def trim_passages(passages, response, userUtterance):
-    a = filterOutUnreliablePassages(passages)
-    return a[:3]
-    """
+    NUMBER_OF_PASSAGES = 3
+    filtered_passages = filterOutUnreliablePassages(passages)
     refined_passages = []
-    for passage in passages:
-        if len(refined_passages) == 3:
+    for passage in filtered_passages:
+        if len(refined_passages) == NUMBER_OF_PASSAGES:
             return refined_passages
         if chatgpt.determine_passage_relevance(passage=passage, statement=response, userUtterance=userUtterance):
             print(passage)
             refined_passages.append(passage)
-    return refined_passages[:3]
-    """
+    return refined_passages[:NUMBER_OF_PASSAGES]

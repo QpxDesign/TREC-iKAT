@@ -20,7 +20,7 @@ def gen_response(prompt, previous_chats):
 
     # When answering, always include all necessary information, repeating anything from the previous question(s) when necessary.
     full_prompt += f" Q: {prompt} A: "
-    output = llm(full_prompt, max_tokens=1024, stop=["Q:"], echo=True)
+    output = llm(full_prompt, max_tokens=250, stop=["Q:"], echo=True)
     ans = output["choices"][-1]["text"]
     ans = ans.split(" A: ")[-1]
     return ans
