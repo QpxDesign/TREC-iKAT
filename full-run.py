@@ -87,7 +87,7 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
                     passage_provenance_objs.append({
                         "id": passage.docid,
                         "text": json.loads(passage.raw)["contents"],
-                        "score": passage.score,
+                        "score": passage.score + 10_000 if passageWasUsed else passage.score,
                         "used": passageWasUsed
                     })
             answer = llama2.answer_question_from_passage(
