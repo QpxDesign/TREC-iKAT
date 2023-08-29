@@ -2,13 +2,14 @@ from utils.remove_extra_spaces import remove_extra_spaces
 import torch
 import json
 import time
-from utils.prevent_trail_off import prevent_trail_off
+# from utils.prevent_trail_off import prevent_trail_off
 from utils.rank_passage_sentances import rank
 from llama_cpp import Llama
-# llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin", n_ctx=10240, n_threads=16) - USE IF NO GPU/NOT ENOUGH VRAM
+llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q4_1.bin",
+            n_ctx=10240, n_threads=16)  # - USE IF NO GPU/NOT ENOUGH VRAM
 # llm = Llama(model_path="./models/llama-2-70b-chat.ggmlv3.q2_K.bin", n_gqa=8, n_ctx=10240, n_threads=16) - USE WITH NO GPU (SEE README) OR IF YOU HAVE LOADS OF VRAM
-llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q3_K_M.bin",
-            n_ctx=10240, n_gpu_layers=50)  # NEEDS ~8GB+ OF VRAM, MUCH FASTER
+# llm = Llama(model_path="./models/llama-2-13b-chat.ggmlv3.q3_K_M.bin",
+# n_ctx=10240, n_gpu_layers=50)  # NEEDS ~8GB+ OF VRAM, MUCH FASTER
 
 torch.cuda.empty_cache()
 
@@ -58,7 +59,7 @@ def answer_question_from_passage(passage, question, previous_chats):
     ans = ans.replace(
         'Sure! Based on the information provided, here is a summary of the passage in one sentence:', '')
     ans = ans.replace("\n", "")
-    return prevent_trail_off(ans)
+    return ans
 
 
 def determine_passage_relevance(passage, statement):

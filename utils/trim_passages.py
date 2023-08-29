@@ -15,8 +15,9 @@ def filterOutUnreliablePassages(passages):
 
 
 def trim_passages(passages, response, userUtterance):
-    NUMBER_OF_PASSAGES = 3
-    filtered_passages = filterOutUnreliablePassages(passages)
+    NUMBER_OF_PASSAGES = 5
+    # filtered_passages = filterOutUnreliablePassages(passages)
+    filtered_passages = passages
     refined_passages = []
     for passage in filtered_passages:
         if len(refined_passages) == NUMBER_OF_PASSAGES:

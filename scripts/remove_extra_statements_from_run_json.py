@@ -5,7 +5,7 @@ import sys
 
 if __name__ == '__main__':
     with open(f'./output/{sys.argv[1]}', 'r') as f:
-        data = json.load(f)    
+        data = json.load(f)
         correct_output = {
             "run_name": data['run_name'],
             "run_type": data['run_type'],
@@ -16,13 +16,13 @@ if __name__ == '__main__':
                 "turn_id": t["turn_id"],
                 "responses": [
                     {
-                        "rank":1,
-                        "text": t['responses'][0]['text'],
+                        "rank": 1,
+                        "text": t['responses'][0]['combined_passage_summaries'],
                         "ptkb_provenance": t['responses'][0]['ptkb_provenance'],
                         "passage_provenance": t['responses'][0]['passage_provenance']
                     }
                 ]
             }
-            correct_output['turns'].append(correct_turn) 
-        with open(f"./output/{sys.argv[1].split('.')[0]}_CF.json", 'a') as f2:
+            correct_output['turns'].append(correct_turn)
+        with open(f"./output/{sys.argv[1].split('.')[0]}_CF-2.json", 'a') as f2:
             f2.write(json.dumps(correct_output))

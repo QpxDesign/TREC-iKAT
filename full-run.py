@@ -12,6 +12,7 @@ import utils.chatgpt as chatgpt
 from utils.extract_keywords import extract_keywords
 from utils.sort_passage_provenances import sort_passage_provenances
 from utils.determine_output_name import determine_output_name
+from utils.prevent_trail_off import prevent_trail_off
 
 start_time = time.time()
 total_turns = 0
@@ -104,7 +105,7 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
                     "generated_prompt": prompt,
                     "text":answer,
                     "preliminary_response": preliminary_response,
-                    "combined_passage_summaries":combined_passage_summaries,
+                    "combined_passage_summaries":prevent_trail_off(combined_passage_summaries),
                     "ptkb_provenance":ptkb_provenance_objs,
                     "passage_provenance":sort_passage_provenances(passage_provenance_objs)
                 }
@@ -126,7 +127,7 @@ if __name__ == '__main__':
         output = {
             "run_name": "georgetown_infosense_run",
             "run_type": "automatic",
-            "internal_id": "3 Passages, No Score Threshold, Llama2 13B GPU CAPABLE, Two Shot Approach without ChatGPT Relevance Verification, Enhanced PTKB Sim Checker ",
+            "internal_id": "5 Passages, No Score Threshold, Llama2 13B GPU CAPABLE, One Shot Approach with ChatGPT Relevance Verification, Enhanced PTKB Sim Checker, NO TF-IDF Reliability Checker ",
             "turns": []
         }
         # for o in data:

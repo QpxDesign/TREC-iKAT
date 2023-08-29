@@ -4,9 +4,8 @@ import json
 nlp = English()
 
 tokenizer = Tokenizer(nlp.vocab)
-tokenizer = Tokenizer(nlp.vocab)
 
-with open('./output/BEST_RUN_250_TOKEN.json', 'r') as f: 
+with open('./output/BEST_RUN_250_TOKEN.json', 'r') as f:
     data = json.load(f)
     for response in data[0]:
         a = data[0]["responses"][0]['text']
@@ -18,5 +17,3 @@ with open('./output/BEST_RUN_250_TOKEN.json', 'r') as f:
             if (len(a) > 250):
             print("🚩")
             """
-
-        

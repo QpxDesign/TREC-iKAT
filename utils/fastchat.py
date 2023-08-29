@@ -8,7 +8,7 @@ import torch
 import time
 
 # SET THIS (NEED A LOT OF VRAM IF USING LLAMA WITH GPU AND FASTCHAT WITH GPU)
-USE_GPU = False
+USE_GPU = True
 
 device = 'cuda' if torch.cuda.is_available() and USE_GPU else 'cpu'
 
@@ -16,7 +16,11 @@ device = 'cuda' if torch.cuda.is_available() and USE_GPU else 'cpu'
 tokenizer = AutoTokenizer.from_pretrained(
     "lmsys/fastchat-t5-3b-v1.0", legacy=False)
 # ONLY HAVE load_in_8bit True if using GPU with limited VRAM
-model = AutoModelForSeq2SeqLM.from_pretrained("lmsys/fastchat-t5-3b-v1.0")
+if USE_GPU:
+    model = AutoModelForSeq2SeqLM.from_pretrained(
+        "lmsys/fastchat-t5-3b-v1.0", load_in_8bit=True)
+else:
+    model = AutoModelForSeq2SeqLM.from_pretrained("lmsys/fastchat-t5-3b-v1.0")
 
 
 def summarize_with_fastchat(passage, question):
