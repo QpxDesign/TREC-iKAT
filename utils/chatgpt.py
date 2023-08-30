@@ -36,12 +36,11 @@ def answer_question_from_passage(passage, question, previous_chats):
     return prevent_trail_off(response['choices'][0]['message']['content'])
 
 
-def determine_passage_relevance(passage, statement, userUtterance) -> bool:
+def determine_passage_relevance(passage_summary, statement, userUtterance) -> bool:
     RECEIVED_RESPONSE = False
     response = []
-    passage_summary = summarize_with_fastchat(
-        json.loads(passage.raw)['contents'], userUtterance)
     while not RECEIVED_RESPONSE:
+        print("TRY-1")
         try:
             prompt = f"Is this passage - {passage_summary} - relevant to this question - {userUtterance} ? Answer with either 'yes' or 'no'."
             response = openai.ChatCompletion.create(

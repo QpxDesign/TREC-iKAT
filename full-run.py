@@ -13,6 +13,7 @@ from utils.extract_keywords import extract_keywords
 from utils.sort_passage_provenances import sort_passage_provenances
 from utils.determine_output_name import determine_output_name
 from utils.prevent_trail_off import prevent_trail_off
+from utils.remove_extra_spaces import remove_extra_spaces
 
 start_time = time.time()
 total_turns = 0
@@ -62,6 +63,7 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
             used_passages = trim_passages(
                 passages, answer, obj["utterance"]) if AUTOMATIC_RUN else trim_passages(
                 passages, answer, obj["resolved_utterance"])
+
             if len(passages) == 0:  # BODGE
                 keywords = extract_keywords(text=answer)
                 for keyword in keywords:
@@ -77,10 +79,9 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
             for passage in passages:
                 passageWasUsed = False
                 for used_passage in used_passages:
-                    if used_passage.docid == passage.docid:
+                    if used_passage["docid"] == passage.docid:
                         passageWasUsed = True
-                        summary = summarize_with_fastchat(
-                            json.loads(passage.raw)['contents'], prompt)
+                        summary = used_passages["summary"]
                         combined_passage_summaries += summary
                         break
                 if N_SHOTS == 1:
@@ -90,11 +91,11 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
                         "score": passage.score + 10_000 if passageWasUsed else passage.score,
                         "used": passageWasUsed
                     })
-            answer = llama2.answer_question_from_passage(
-                combined_passage_summaries, prompt, topic_obj["turns"][0:turn_index])
             N_SHOTS = N_SHOTS - 1
 
         # final_ans = chatgpt.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
+        answer = remove_extra_spaces(
+            prevent_trail_off(combined_passage_summaries))
         print(f"Final Answer: {answer}")
         turn_outputs.append({
             "turn_id": f"{topic_obj['number']}_{obj['turn_id']}",
@@ -105,7 +106,6 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
                     "generated_prompt": prompt,
                     "text":answer,
                     "preliminary_response": preliminary_response,
-                    "combined_passage_summaries":prevent_trail_off(combined_passage_summaries),
                     "ptkb_provenance":ptkb_provenance_objs,
                     "passage_provenance":sort_passage_provenances(passage_provenance_objs)
                 }
