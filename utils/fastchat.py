@@ -8,7 +8,7 @@ import torch
 import time
 
 # SET THIS (NEED A LOT OF VRAM IF USING LLAMA WITH GPU AND FASTCHAT WITH GPU)
-USE_GPU = True
+USE_GPU = False
 
 device = 'cuda' if torch.cuda.is_available() and USE_GPU else 'cpu'
 

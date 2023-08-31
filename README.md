@@ -51,7 +51,7 @@ This was tested/developed/ran from a computer running Ubuntu 22.04 with an RTX 3
 
 #### Helpful Commands
 
-Format large output JSON files with `cat output/AUG17_RUN_2.json | python -m json.tool > output/AUG17_RUN_2_F.json`
+Format large output JSON files with `cat output/AUG30_RUN_1.json | python -m json.tool > output/AUG30_RUN_1_F.json`
 
 #### Runs We're Submitting (SUBJECT TO CHANGE) (IN ORDER)
 

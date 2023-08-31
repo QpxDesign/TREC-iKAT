@@ -18,7 +18,10 @@ def filterOutUnreliablePassages(passages):
 def trim_passages(passages, response, userUtterance):
     NUMBER_OF_PASSAGES = 5
     filtered_passages = filterOutUnreliablePassages(passages)
-    # filtered_passages = passages
+    return filtered_passages[:NUMBER_OF_PASSAGES]
+
+
+"""    # filtered_passages = passages
     refined_passages = []
 
     for passage in filtered_passages:
@@ -32,4 +35,4 @@ def trim_passages(passages, response, userUtterance):
                 "docid": passage.docid,
                 "summary": passage_summary
             })
-    return refined_passages[:NUMBER_OF_PASSAGES]
+    return refined_passages[:NUMBER_OF_PASSAGES]"""

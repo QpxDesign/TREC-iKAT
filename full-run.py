@@ -30,8 +30,8 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
     for obj in topic_obj["turns"]:
         N_SHOTS = 2
         total_turns += 1
-        ranked_ptkbs = ptkb_similarity.rankPTKBS(PTKBs, obj["utterance"])
-        ranked_ptkbs = list(filter(lambda a: a[1] > .25, ranked_ptkbs))
+        ranked_ptkbs = list(filter(
+            lambda a: a[1] > .25, ptkb_similarity.rankPTKBS(PTKBs, obj["utterance"])))
         if not AUTOMATIC_RUN:
             used_ptkbs = obj["ptkb_provenance"]
             ranked_ptkbs = []
@@ -79,9 +79,10 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
             for passage in passages:
                 passageWasUsed = False
                 for used_passage in used_passages:
-                    if used_passage["docid"] == passage.docid:
+                    if used_passage.docid == passage.docid:
                         passageWasUsed = True
-                        summary = used_passages["summary"]
+                        summary = summarize_with_fastchat(
+                            json.loads(passage.raw)['contents'], prompt)
                         combined_passage_summaries += summary
                         break
                 if N_SHOTS == 1:
@@ -91,6 +92,9 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
                         "score": passage.score + 10_000 if passageWasUsed else passage.score,
                         "used": passageWasUsed
                     })
+            if N_SHOTS-1 != 0:
+                answer = llama2.answer_question_from_passage(
+                    combined_passage_summaries, prompt, topic_obj["turns"][0:turn_index])
             N_SHOTS = N_SHOTS - 1
 
         # final_ans = chatgpt.answer_question_from_passage(combined_passage_summaries, prompt,topic_obj["turns"][0:turn_index])
@@ -127,13 +131,14 @@ if __name__ == '__main__':
         output = {
             "run_name": "georgetown_infosense_run",
             "run_type": "automatic",
-            "internal_id": "5 Passages, No Score Threshold, Llama2 13B GPU CAPABLE, One Shot Approach with ChatGPT Relevance Verification, Enhanced PTKB Sim Checker, NO TF-IDF Reliability Checker ",
+            "internal_id": "5 Passages, No Score Threshold, Llama2 13B GPU CAPABLE, One Shot Approach with NO ChatGPT Relevance Verification, Enhanced PTKB Sim Checker, WITH TF-IDF Reliability Checker, actually FULL RUN ",
             "turns": []
         }
-        # for o in data:
-        # output['turns'].append(run(o))
+        for o in data:
+            # output['turns'].append(run(o))
+            output['turns'] += run(o)
         # output = run(data[index])
-        output['turns'] += run(data[index])
+        # output['turns'] += run(data[index])
         filename = determine_output_name()
         with open(f"./output/{filename}", 'a') as f2:
             f2.write(json.dumps(output))
