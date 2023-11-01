@@ -28,7 +28,7 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
     turn_index = 0
     turn_outputs = []
     for obj in topic_obj["turns"]:
-        N_SHOTS = 2
+        N_SHOTS = 1
         total_turns += 1
         ranked_ptkbs = list(filter(
             lambda a: a[1] > .25, ptkb_similarity.rankPTKBS(PTKBs, obj["utterance"])))
@@ -43,8 +43,8 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
             ranked_ptkbs, obj["utterance"]) if AUTOMATIC_RUN else utils.gen_prompt_from_ptkbs_and_question.gen(
             ranked_ptkbs, obj["resolved_utterance"])
         print("prompt: " + prompt)
-        preliminary_response = llama2.gen_response(
-            prompt, topic_obj["turns"][0:turn_index])
+       # preliminary_response = llama2.gen_response(
+        #  prompt, topic_obj["turns"][0:turn_index])
         ptkb_provenance_objs = []
 
         for ptkb in ranked_ptkbs:
@@ -54,7 +54,7 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
                 "score": ptkb[1]
 
             })
-        answer = preliminary_response
+        answer = prompt
         passage_provenance_objs = []
         while N_SHOTS > 0:
             combined_passage_summaries = ""
@@ -109,7 +109,6 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
                     "user_utterance": obj["utterance"],
                     "generated_prompt": prompt,
                     "text":answer,
-                    "preliminary_response": preliminary_response,
                     "ptkb_provenance":ptkb_provenance_objs,
                     "passage_provenance":sort_passage_provenances(passage_provenance_objs)
                 }
@@ -131,7 +130,7 @@ if __name__ == '__main__':
         output = {
             "run_name": "georgetown_infosense_run",
             "run_type": "automatic",
-            "internal_id": "5 Passages, No Score Threshold, Llama2 13B GPU CAPABLE, One Shot Approach with NO ChatGPT Relevance Verification, Enhanced PTKB Sim Checker, WITH TF-IDF Reliability Checker, actually FULL RUN ",
+            "internal_id": "BM --> LLM, no LLama",
             "turns": []
         }
         for o in data:

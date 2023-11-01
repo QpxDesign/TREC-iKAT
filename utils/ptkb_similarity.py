@@ -27,16 +27,18 @@ def rankPTKBS(PTKBs, Text):
 
 """
 a = rankPTKBS([
-    "I don't like the new spin-off; because I keep comparing the two and it has lower quality.",
-    "Because of my kidney problem, I have to drink water frequently to stay hydrated.",
-    "I'm going to change my phone.",
-    "I can't exercise too much because of the heart problem that I have.",
-    "I'm vegetarian.",
-    "I'm lactose intolerant.",
-    "I'm allergic to soybeans.",
-    "I just finished watching the Game of Thrones.",
-    "I didn't like how the series ended, especially the war scenes.",
-    "I'm an Android user."
-], "I prefer a natural diet, not a pill-based diet. Which of the aforementioned ones is natural?")
+"I drink milk every day",
+"I own a Christy Dawn leather shoe",
+"I hold a bachelor's degree in sociology",
+"I love formula one races",
+"I love Rally races.",
+"I enjoy riding bikes.",
+"I like to shop.",
+"I like sightseeing.",
+"I own a black Harley-Davidson motorcycle.",
+"My children live in Germany.",
+"I live in the UK.",
+
+], "I'm looking for a car, can you help me?")
 print(a)
 """

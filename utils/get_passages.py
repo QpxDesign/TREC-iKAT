@@ -17,7 +17,8 @@ def getPassagesFromSearchQuery(query, maxNumberPassages=10, exactMatchRequired=F
 
 
 """
-a = getPassagesFromSearchQuery("Black Garlic paste",100,True,True)
-b = json.loads(a[0].raw)["contents"]
+a = getPassagesFromSearchQuery(
+    "Sure! What kind of car are you looking for? Would you like something sleek and sporty or practical and reliable?", 100)
+b = json.loads(a[2].raw)["contents"]
 print(b)
 """

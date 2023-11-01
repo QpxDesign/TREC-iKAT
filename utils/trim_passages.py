@@ -17,8 +17,8 @@ def filterOutUnreliablePassages(passages):
 
 def trim_passages(passages, response, userUtterance):
     NUMBER_OF_PASSAGES = 5
-    filtered_passages = filterOutUnreliablePassages(passages)
-    return filtered_passages[:NUMBER_OF_PASSAGES]
+    # filtered_passages = filterOutUnreliablePassages(passages)
+    return passages[:NUMBER_OF_PASSAGES]
 
 
 """    # filtered_passages = passages
