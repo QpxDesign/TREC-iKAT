@@ -9,7 +9,7 @@ def filterOutUnreliablePassages(passages):
     final = []
     for passage in passages:
         predicted_label = determinePassageReliability(
-            json.loads(passage.raw())["contents"])
+            json.loads(passage["doc"].raw())["contents"])
         if predicted_label == 'reliable':
             final.append(passage)
     return final

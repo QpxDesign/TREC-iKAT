@@ -8,7 +8,7 @@ import json
 import time
 import os
 
-searcher = LuceneSearcher('data/passage-index')
+searcher = LuceneSearcher("./data/clueweb22-bm25-index")
 
 
 def getPassagesFromSearchQuery(query, maxNumberPassages=10):
@@ -28,7 +28,7 @@ for keyword in EXPLICIT_UNTRUSTWORTHY_SITES:
     ap = getPassagesFromSearchQuery(keyword, 10)
     for p in ap:
         EXPLICIT_UNTRUSTWORTHY_SITES_PASSAGES.append(
-            json.loads(p.raw())["contents"])
+            json.loads(p.raw)["contents"])
 
 ADVERTISEMENT_PASSAGES = []
 spam_keywords = [
@@ -41,7 +41,7 @@ spam_keywords = [
 for keyword in spam_keywords:
     ap = getPassagesFromSearchQuery(keyword, 10)
     for p in ap:
-        ADVERTISEMENT_PASSAGES.append(json.loads(p.raw())["contents"])
+        ADVERTISEMENT_PASSAGES.append(json.loads(p.raw)["contents"])
 
 # GET WIKIPEDIA (RELIABLE) PASSAGES FROM WIKITEXT
 WIKIPEDIA_PASSAGES = []

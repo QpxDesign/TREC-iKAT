@@ -7,14 +7,21 @@ splade_searcher = LuceneImpactSearcher(
 bm25_searcher = LuceneSearcher("./data/clueweb22-bm25-index")
 
 
-def getPassagesFromSearchQuery(query, maxNumberPassages=10):
+def getPassagesFromSearchQuery(query, maxNumberPassages=100):
     hits = splade_searcher.search(q=query, k=maxNumberPassages)
     final_hits = []
+    index = 1
     for hit in hits:
         clueweb_docid = spladeDocIdToClueweb(hit.docid)
         doc = getDocFromDocId(clueweb_docid)
         if doc is not None:
-            final_hits.append(doc)
+            final_hits.append({
+                "doc": doc,
+                "result": hit
+            })
+        else:
+            print(f"Doc #{index} was not found")
+        index += 1
     return final_hits
 
 
@@ -29,7 +36,9 @@ def spladeDocIdToClueweb(docid):
     return f"clueweb22-en00{docid[0]}{docid[1]}-{docid[2]}{docid[3]}-{docid[4]}{docid[5]}{docid[6:len(docid)]}"
 
 
+"""
 a = getPassagesFromSearchQuery(
     "Sure! What kind of car are you looking for? Would you like something sleek and sporty or practical and reliable?", 100)
 b = json.loads(a[2].raw())["contents"]
 print(b)
+"""
