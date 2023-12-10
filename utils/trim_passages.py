@@ -9,7 +9,7 @@ def filterOutUnreliablePassages(passages):
     final = []
     for passage in passages:
         predicted_label = determinePassageReliability(
-            json.loads(passage.raw)["contents"])
+            json.loads(passage.raw())["contents"])
         if predicted_label == 'reliable':
             final.append(passage)
     return final
@@ -26,7 +26,7 @@ def trim_passages(passages, response, userUtterance):
 
     for passage in filtered_passages:
         passage_summary = summarize_with_fastchat(
-            json.loads(passage.raw)['contents'], userUtterance)
+            json.loads(passage.raw())['contents'], userUtterance)
         if len(refined_passages) == NUMBER_OF_PASSAGES:
             return refined_passages
         if chatgpt.determine_passage_relevance(passage_summary=passage_summary, statement=response, userUtterance=userUtterance):

@@ -82,13 +82,13 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
                     if used_passage.docid == passage.docid:
                         passageWasUsed = True
                         summary = summarize_with_fastchat(
-                            json.loads(passage.raw)['contents'], prompt)
+                            json.loads(passage.raw())['contents'], prompt)
                         combined_passage_summaries += summary
                         break
                 if N_SHOTS == 1:
                     passage_provenance_objs.append({
                         "id": passage.docid,
-                        "text": json.loads(passage.raw)["contents"],
+                        "text": json.loads(passage.raw())["contents"],
                         "score": passage.score + 10_000 if passageWasUsed else passage.score,
                         "used": passageWasUsed
                     })
@@ -108,9 +108,9 @@ def run(topic_obj):  # outputs JSON that fufils all requirements (ranked PTKBs f
                     "rank": 1,
                     "user_utterance": obj["utterance"],
                     "generated_prompt": prompt,
-                    "text":answer,
-                    "ptkb_provenance":ptkb_provenance_objs,
-                    "passage_provenance":sort_passage_provenances(passage_provenance_objs)
+                    "text": answer,
+                    "ptkb_provenance": ptkb_provenance_objs,
+                    "passage_provenance": sort_passage_provenances(passage_provenance_objs)
                 }
 
             ]

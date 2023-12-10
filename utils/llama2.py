@@ -65,7 +65,7 @@ def answer_question_from_passage(passage, question, previous_chats):
 
 
 def determine_passage_relevance(passage, statement):
-    prompt = f"Q: Is this passage - {json.loads(passage.raw)['contents']} relevant to this response - {statement}? Answer with either 'yes' or 'no'. A: "
+    prompt = f"Q: Is this passage - {json.loads(passage.raw())['contents']} relevant to this response - {statement}? Answer with either 'yes' or 'no'. A: "
     output = llm(prompt, max_tokens=256, stop=["Q:"], echo=True)
     ans = output["choices"][-1]["text"]
     ans = ans.split(" A: ")[-1]

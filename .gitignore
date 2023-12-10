@@ -1,5 +1,7 @@
 data/fastText/*
 data/clueweb/*
+data/clueweb22-bm25-index/*
+data/passage-index-splade/*
 output/*
 models/*
 llama2/*
